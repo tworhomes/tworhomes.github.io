@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { realtorProfile, t } from '@/data/realtorProfile'
-import ClientFunnelWidget from '@/components/ClientFunnelWidget.vue'
-import ImpactStoriesSection from '@/components/ImpactStoriesSection.vue'
-import SocialHubSection from '@/components/SocialHubSection.vue'
+import { realtorProfile, featureFlags, currentLocale, t } from '@/data/realtorProfile'
 import SocialIcon from '@/components/SocialIcon.vue'
 import heroPortrait from '@/assets/maryin-hero.jpg'
 
@@ -39,10 +36,17 @@ const realtorChannel = computed(() =>
           </p>
 
           <div class="hero-cta-row">
-            <a href="#client-funnel" class="btn btn-primary">
+            <RouterLink to="/contact" class="btn btn-primary">
               <SocialIcon name="sparkles" :size="15" />
               <span>{{ t(realtorProfile.hero.primaryCta) }}</span>
-            </a>
+            </RouterLink>
+            <RouterLink
+              v-if="featureFlags.neighborhoodVibeMatcher"
+              to="/quiz"
+              class="btn btn-outline hero-quiz-btn"
+            >
+              <span>🧭 {{ currentLocale === 'en' ? 'Take the Quiz' : 'Hacer el Quiz' }}</span>
+            </RouterLink>
             <a :href="realtorProfile.phoneHref" class="btn btn-outline">
               <SocialIcon name="phone" :size="15" />
               <span>{{ t(realtorProfile.hero.secondaryCta) }}</span>
@@ -87,7 +91,7 @@ const realtorChannel = computed(() =>
         </div>
 
         <div class="hero-portrait-col">
-          <div class="portrait-card card">
+          <div v-tilt class="portrait-card card">
             <div class="portrait-image-wrap">
               <img
                 :src="heroPortrait"
@@ -131,6 +135,7 @@ const realtorChannel = computed(() =>
           <div
             v-for="stat in realtorProfile.stats"
             :key="stat.value"
+            v-tilt
             class="card stat-card"
           >
             <p class="stat-value">{{ stat.value }}</p>
@@ -141,49 +146,103 @@ const realtorChannel = computed(() =>
       </div>
     </section>
 
-    <!-- 53+ HOMES SOLD & LIVES CHANGED SPOTLIGHT -->
-    <ImpactStoriesSection />
-
-    <!-- INTERACTIVE CLIENT ACQUISITION FUNNEL -->
-    <section id="client-funnel" class="section">
-      <div class="container">
-        <ClientFunnelWidget />
-      </div>
-    </section>
-
-    <!-- CORE SERVICE PILLARS ("HOW MARYIN WINS FOR CLIENTS") -->
-    <section class="section">
+    <!-- DIRECT DOORS TO EVERY PART OF THE SITE -->
+    <section class="section pathways-section">
       <div class="container">
         <div class="section-header">
           <span class="eyebrow">
-            {{ t(realtorProfile.servicePillarsHeader.eyebrow) }}
+            {{ currentLocale === 'en' ? 'EXPLORE MARYIN’S PLATFORM' : 'EXPLORA LA PLATAFORMA' }}
           </span>
           <h2 class="section-title">
-            {{ t(realtorProfile.servicePillarsHeader.title) }}
+            {{ currentLocale === 'en' ? 'Where Would You Like to Begin?' : '¿Cómo Deseas Comenzar?' }}
           </h2>
           <p class="section-subtitle">
-            {{ t(realtorProfile.bio.lead) }}
+            {{ currentLocale === 'en'
+              ? 'Direct doorways into Maryin’s tailored community quiz, 8-county market guide, client closing stories, and bespoke consultation.'
+              : 'Acceso directo al test de comunidades, guía de 8 condados, historias de éxito y consulta personalizada con Maryin.'
+            }}
           </p>
         </div>
 
-        <div class="pillars-grid">
+        <div class="pathways-grid">
           <article
-            v-for="pillar in realtorProfile.servicePillars"
-            :key="pillar.id"
-            class="card pillar-card"
+            v-if="featureFlags.neighborhoodVibeMatcher"
+            v-tilt
+            class="card pathway-card"
           >
-            <div class="pillar-top">
-              <span class="pillar-code">{{ pillar.code }}</span>
-              <span class="tag tag-gold">{{ t(pillar.badge) }}</span>
+            <div class="pathway-top">
+              <span class="pathway-icon">🧭</span>
+              <span class="tag tag-gold">{{ currentLocale === 'en' ? '60-Sec Test' : 'Test 60 Seg' }}</span>
             </div>
-            <h3 class="pillar-title">{{ t(pillar.title) }}</h3>
-            <p class="pillar-subtitle">{{ t(pillar.subtitle) }}</p>
-            <ul class="pillar-list">
-              <li v-for="(bullet, idx) in pillar.bullets" :key="idx">
-                <span class="check-mark">✓</span>
-                <span>{{ t(bullet) }}</span>
-              </li>
-            </ul>
+            <h3 class="pathway-title">
+              {{ currentLocale === 'en' ? 'Triangle Match Quiz' : 'Quiz de Comunidades' }}
+            </h3>
+            <p class="pathway-desc">
+              {{ currentLocale === 'en'
+                ? 'Answer 3 quick lifestyle questions to discover your tailored Triangle town, school district, and commute pocket.'
+                : 'Responde 3 preguntas rápidas para descubrir tu zona ideal, escuelas y traslados en el Triangle.'
+              }}
+            </p>
+            <RouterLink to="/quiz" class="btn btn-outline pathway-btn">
+              <span>{{ currentLocale === 'en' ? 'Take the Quiz' : 'Hacer el Quiz' }} →</span>
+            </RouterLink>
+          </article>
+
+          <article v-tilt class="card pathway-card">
+            <div class="pathway-top">
+              <span class="pathway-icon">🗺️</span>
+              <span class="tag">{{ currentLocale === 'en' ? '8 NC Counties' : '8 Condados' }}</span>
+            </div>
+            <h3 class="pathway-title">
+              {{ currentLocale === 'en' ? 'NC Markets & Perks' : 'Mercados y Beneficios' }}
+            </h3>
+            <p class="pathway-desc">
+              {{ currentLocale === 'en'
+                ? 'Search 30+ communities across Wake, Durham, Johnston, and Chatham with builder incentives and market insights.'
+                : 'Explora más de 30 ciudades en Wake, Durham, Johnston y Chatham con incentivos de constructoras.'
+              }}
+            </p>
+            <RouterLink to="/markets" class="btn btn-outline pathway-btn">
+              <span>{{ currentLocale === 'en' ? 'Explore Markets' : 'Ver Mercados' }} →</span>
+            </RouterLink>
+          </article>
+
+          <article v-tilt class="card pathway-card">
+            <div class="pathway-top">
+              <span class="pathway-icon">⭐</span>
+              <span class="tag tag-emerald">{{ currentLocale === 'en' ? '53+ Closed Homes' : '53+ Casas Vendidas' }}</span>
+            </div>
+            <h3 class="pathway-title">
+              {{ currentLocale === 'en' ? 'Track Record & Stories' : 'Trayectoria e Historias' }}
+            </h3>
+            <p class="pathway-desc">
+              {{ currentLocale === 'en'
+                ? 'Learn about Maryin’s bilingual standards, verified $17M+ sales volume, and real client closing table victories.'
+                : 'Conoce los estándares bilingües de Maryin, más de $17M en volumen y victorias reales de clientes.'
+              }}
+            </p>
+            <RouterLink to="/about" class="btn btn-outline pathway-btn">
+              <span>{{ currentLocale === 'en' ? 'Read Maryin’s Story' : 'Conoce a Maryin' }} →</span>
+            </RouterLink>
+          </article>
+
+          <article v-tilt class="card pathway-card pathway-card-highlight">
+            <div class="pathway-top">
+              <span class="pathway-icon">✨</span>
+              <span class="tag tag-gold">{{ currentLocale === 'en' ? 'VIP Advisory' : 'Asesoría VIP' }}</span>
+            </div>
+            <h3 class="pathway-title">
+              {{ currentLocale === 'en' ? 'Start Your Journey' : 'Comienza Tu Plan' }}
+            </h3>
+            <p class="pathway-desc">
+              {{ currentLocale === 'en'
+                ? 'Connect directly to plan your home search, receive builder representation, or request a bespoke home valuation CMA.'
+                : 'Planifica tu compra de casa, recibe asesoría para casas nuevas o solicita una valoración CMA de tu propiedad.'
+              }}
+            </p>
+            <RouterLink to="/contact" class="btn btn-primary pathway-btn">
+              <span>{{ currentLocale === 'en' ? 'Start Consultation' : 'Iniciar Consulta' }} →</span>
+            </RouterLink>
           </article>
         </div>
       </div>
@@ -208,6 +267,7 @@ const realtorChannel = computed(() =>
           <article
             v-for="item in realtorProfile.clientCommitments"
             :key="item.id"
+            v-tilt
             class="card commitment-card"
           >
             <div class="commitment-top">
@@ -230,9 +290,6 @@ const realtorChannel = computed(() =>
         </div>
       </div>
     </section>
-
-    <!-- OMNICHANNEL SOCIAL & DIRECT CONTACT HUB -->
-    <SocialHubSection />
   </div>
 </template>
 
@@ -415,67 +472,75 @@ const realtorChannel = computed(() =>
   color: var(--text-secondary);
 }
 
-.pillars-grid {
+/* Pathways Gateway Section */
+.pathways-section {
+  padding-top: 1rem;
+  padding-bottom: 2.5rem;
+}
+
+.pathways-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   gap: 1.25rem;
 }
 
-.pillar-card {
+.pathway-card {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  padding: 1.65rem 1.65rem;
+  padding: 1.65rem 1.45rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pillar-top {
+.pathway-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+.pathway-card-highlight {
+  border-color: rgba(245, 158, 11, 0.35);
+  background: linear-gradient(180deg, var(--bg-card) 0%, rgba(245, 158, 11, 0.03) 100%);
+}
+
+.pathway-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  margin-bottom: 0.15rem;
+  margin-bottom: 0.25rem;
 }
 
-.pillar-code {
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--accent-primary);
-  opacity: 0.85;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
+.pathway-icon {
+  font-size: 1.65rem;
+  line-height: 1;
 }
 
-.pillar-title {
-  font-size: 1.22rem;
+.pathway-title {
+  font-family: var(--font-serif);
+  font-size: 1.18rem;
   font-weight: 700;
   line-height: 1.3;
+  color: var(--text-primary);
+  margin: 0;
 }
 
-.pillar-subtitle {
-  font-size: 0.92rem;
+.pathway-desc {
+  font-size: 0.875rem;
   color: var(--text-secondary);
+  line-height: 1.55;
+  margin: 0;
+  flex: 1;
 }
 
-.pillar-list {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.55rem;
-  margin-top: 0.35rem;
+.pathway-btn {
+  margin-top: 0.5rem;
+  width: 100%;
+  justify-content: center;
   font-size: 0.88rem;
-  color: var(--text-secondary);
-}
-
-.pillar-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.5rem;
-}
-
-.check-mark {
-  color: var(--accent-emerald);
-  font-weight: 700;
+  padding: 0.65rem 1rem;
 }
 
 .commitments-grid {
@@ -559,8 +624,8 @@ const realtorChannel = computed(() =>
     gap: 0.85rem;
   }
 
-  .pillars-grid {
-    grid-template-columns: 1fr;
+  .pathways-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
   .commitments-grid {
@@ -569,6 +634,9 @@ const realtorChannel = computed(() =>
 }
 
 @media (max-width: 640px) {
+  .pathways-grid {
+    grid-template-columns: 1fr;
+  }
   .hero-section {
     padding: 1.15rem 0 1.25rem;
   }

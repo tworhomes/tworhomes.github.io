@@ -1,38 +1,59 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
-import { realtorProfile, currentLocale, toggleLocale, t } from '@/data/realtorProfile'
+import { realtorProfile, featureFlags, currentLocale, toggleLocale, t } from '@/data/realtorProfile'
 
 const route = useRoute()
+function getInitialTheme(): boolean {
+  if (typeof window === 'undefined') return false
+  const saved = localStorage.getItem('theme-preference')
+  if (saved === 'light') return true
+  if (saved === 'dark') return false
+  return Boolean(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)
+}
+
 const isLight = ref(
   typeof document !== 'undefined'
-    ? document.documentElement.getAttribute('data-theme') === 'light'
+    ? (document.documentElement.getAttribute('data-theme') === 'light' || getInitialTheme())
     : false
 )
 const mobileMenuOpen = ref(false)
 
-const navItems = computed(() => [
-  {
-    label: t({ en: 'Home', es: 'Inicio' }),
-    to: '/'
-  },
-  {
-    label: t({ en: 'About', es: 'Sobre Mí' }),
-    to: '/about'
-  },
-  {
-    label: t({ en: 'NC Markets & Perks', es: 'Mercados en NC y Beneficios' }),
-    to: '/markets'
-  },
-  {
+const navItems = computed(() => {
+  const items = [
+    {
+      label: t({ en: 'Home', es: 'Inicio' }),
+      to: '/'
+    },
+    {
+      label: t({ en: 'About', es: 'Sobre Mí' }),
+      to: '/about'
+    },
+    {
+      label: t({ en: 'NC Markets & Perks', es: 'Mercados en NC y Beneficios' }),
+      to: '/markets'
+    }
+  ]
+
+  if (featureFlags.value.neighborhoodVibeMatcher) {
+    items.push({
+      label: t({ en: 'Community Quiz', es: 'Quiz de Zonas' }),
+      to: '/quiz'
+    })
+  }
+
+  items.push({
     label: t({ en: 'Contact', es: 'Contacto' }),
     to: '/contact'
-  }
-])
+  })
+
+  return items
+})
 
 function applyTheme(light: boolean) {
   const theme = light ? 'light' : 'dark'
   document.documentElement.setAttribute('data-theme', theme)
+  document.documentElement.style.colorScheme = light ? 'only light' : 'dark'
   document.documentElement.style.backgroundColor = light ? '#f6f5f1' : '#0b0f19'
   document.documentElement.style.color = light ? '#292524' : '#f8fafc'
   const metaTheme = document.querySelector('meta[name="theme-color"]')
@@ -48,6 +69,37 @@ function toggleTheme() {
     document.documentElement.classList.remove('theme-transition')
   }, 350)
 }
+
+onMounted(() => {
+  // Sync state with DOM/device
+  if (typeof document !== 'undefined') {
+    const currentTheme = document.documentElement.getAttribute('data-theme')
+    if (currentTheme) {
+      isLight.value = currentTheme === 'light'
+    } else {
+      isLight.value = getInitialTheme()
+      applyTheme(isLight.value)
+    }
+  }
+
+  // Listen to device preference changes in real-time
+  if (typeof window !== 'undefined' && window.matchMedia) {
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)')
+    const handleDeviceThemeChange = (e: MediaQueryListEvent) => {
+      // When the user toggles light/dark mode in their phone/OS control center,
+      // update the site theme immediately to follow their device
+      isLight.value = e.matches
+      applyTheme(e.matches)
+      localStorage.removeItem('theme-preference')
+    }
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener('change', handleDeviceThemeChange)
+    } else if ('addListener' in mediaQuery) {
+      (mediaQuery as any).addListener(handleDeviceThemeChange)
+    }
+  }
+})
 
 function closeMobileMenu() {
   mobileMenuOpen.value = false

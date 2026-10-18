@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { realtorProfile, currentLocale, t } from '@/data/realtorProfile'
 import SocialIcon from '@/components/SocialIcon.vue'
 
@@ -27,6 +27,18 @@ const budgetRange = ref('$350,000 – $500,000')
 const buyerTimeline = ref('Within 1–3 Months')
 const buyerProgram = ref('First-Time Homebuyer Guidance & NC Assistance Programs')
 const buyerNotes = ref('')
+const mustHavesTextareaRef = ref<HTMLTextAreaElement | null>(null)
+
+function adjustTextareaHeight(e?: Event) {
+  const el = (e?.target as HTMLTextAreaElement | null) || mustHavesTextareaRef.value
+  if (!el) return
+  el.style.height = 'auto'
+  el.style.height = `${el.scrollHeight}px`
+}
+
+watch(buyerNotes, () => {
+  nextTick(adjustTextareaHeight)
+})
 
 watch(
   () => props.initialArea,
@@ -160,13 +172,13 @@ async function copyBriefToClipboard() {
 </script>
 
 <template>
-  <div class="funnel-card card">
-    <div class="funnel-top">
+  <div class="consultation-card card">
+    <div class="consultation-top">
       <div>
         <span class="eyebrow">
           {{ t(realtorProfile.funnelConfig.eyebrow) }}
         </span>
-        <h3 class="funnel-title">
+        <h3 class="consultation-title">
           {{ t(realtorProfile.funnelConfig.title) }}
         </h3>
       </div>
@@ -202,7 +214,7 @@ async function copyBriefToClipboard() {
       </div>
     </div>
 
-    <form class="funnel-form" @submit.prevent="handlePreparePlan">
+    <form class="consultation-form" @submit.prevent="handlePreparePlan">
       <!-- Dynamic Mode Banner -->
       <div class="mode-callout">
         <template v-if="activeMode === 'buyer'">
@@ -298,19 +310,27 @@ async function copyBriefToClipboard() {
         </div>
 
         <div class="field-group full-width">
-          <label class="field-label">
-            {{ currentLocale === 'en' ? 'Must-Haves (Beds, Lot Size, School District)' : 'Detalles adicionales (Habitaciones, Lote, etc.)' }}
-          </label>
-          <input
+          <div class="field-label-row">
+            <label class="field-label">
+              {{ currentLocale === 'en' ? 'Must-Haves (Beds, Lot Size, School District)' : 'Detalles adicionales (Habitaciones, Lote, etc.)' }}
+            </label>
+            <span class="char-counter" :class="{ 'char-counter-near': buyerNotes.length >= 450 }">
+              {{ buyerNotes.length }}/500
+            </span>
+          </div>
+          <textarea
+            ref="mustHavesTextareaRef"
             v-model="buyerNotes"
-            type="text"
-            class="input-field"
+            maxlength="500"
+            rows="2"
+            class="input-field textarea-field must-haves-textarea"
             :placeholder="
               currentLocale === 'en'
                 ? 'e.g., 4 beds, 2-car garage, new build incentives in Clayton or Durham...'
                 : 'Ej. 4 habitaciones, garaje doble, incentivos en casa nueva en Clayton o Durham...'
             "
-          >
+            @input="adjustTextareaHeight"
+          />
         </div>
       </div>
 
@@ -478,7 +498,7 @@ async function copyBriefToClipboard() {
       </div>
 
       <!-- Instant Omnichannel Action Bar -->
-      <div class="funnel-actions">
+      <div class="consultation-actions">
         <a :href="mailtoHref" class="btn btn-primary" @click="handlePreparePlan">
           <SocialIcon name="email" :size="15" />
           <span>{{
@@ -522,7 +542,7 @@ async function copyBriefToClipboard() {
         </button>
       </div>
 
-      <p v-if="submittedPreview" class="funnel-confirm">
+      <p v-if="submittedPreview" class="consultation-confirm">
         <SocialIcon name="sparkles" :size="15" />
         <span>{{
           currentLocale === 'en'
@@ -535,19 +555,19 @@ async function copyBriefToClipboard() {
 </template>
 
 <style scoped>
-.funnel-card {
+.consultation-card {
   padding: 2.1rem;
   border: 1px solid var(--border-hover);
 }
 
-.funnel-top {
+.consultation-top {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
-.funnel-title {
+.consultation-title {
   font-family: var(--font-serif);
   font-size: clamp(1.45rem, 2.5vw, 1.95rem);
   margin-top: 0.3rem;
@@ -626,27 +646,55 @@ async function copyBriefToClipboard() {
   grid-column: 1 / -1;
 }
 
+.field-label-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.char-counter {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.char-counter-near {
+  color: var(--accent-gold);
+  font-weight: 700;
+}
+
+.must-haves-textarea {
+  min-height: calc(1.5em * 2 + 1.44rem); /* 2 lines on computer */
+  max-height: calc(1.5em * 5 + 1.44rem); /* expands up to 5 lines */
+  line-height: 1.5;
+  resize: vertical;
+  overflow-y: auto;
+  font-family: var(--font-sans);
+}
+
 .field-label {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-secondary);
 }
 
-.funnel-actions {
+.consultation-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
   margin-top: 1.25rem;
 }
 
-.funnel-actions .btn {
+.consultation-actions .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.45rem;
 }
 
-.funnel-confirm {
+.consultation-confirm {
   display: flex;
   align-items: flex-start;
   gap: 0.65rem;
@@ -661,7 +709,7 @@ async function copyBriefToClipboard() {
   line-height: 1.5;
 }
 
-.funnel-confirm :deep(.theme-social-icon) {
+.consultation-confirm :deep(.theme-social-icon) {
   flex-shrink: 0;
   margin-top: 0.15rem;
 }
@@ -672,18 +720,22 @@ async function copyBriefToClipboard() {
     grid-template-columns: 1fr;
   }
 
-  .funnel-card {
+  .consultation-card {
     padding: 1.25rem;
   }
 
-  .funnel-actions {
+  .consultation-actions {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.6rem;
   }
 
-  .funnel-actions .btn {
+  .consultation-actions .btn {
     width: 100%;
+  }
+
+  .must-haves-textarea {
+    min-height: calc(1.5em * 3 + 1.44rem); /* 3 lines on mobile */
   }
 }
 </style>

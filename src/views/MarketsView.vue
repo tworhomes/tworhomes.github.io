@@ -1,67 +1,71 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-import { RouterLink } from 'vue-router'
-import { realtorProfile, currentLocale, t } from '@/data/realtorProfile'
-import ClientFunnelWidget from '@/components/ClientFunnelWidget.vue'
+import { RouterLink, useRouter } from 'vue-router'
+import { realtorProfile, featureFlags, currentLocale, t } from '@/data/realtorProfile'
 import SocialIcon from '@/components/SocialIcon.vue'
+
+const router = useRouter()
 
 // Interactive State
 const searchQuery = ref('')
 const selectedRegion = ref('all')
 const activeCity = ref<string | null>(null)
 const activeCounty = ref<string | null>(null)
-const funnelTargetArea = ref('Raleigh / Wake County')
-const funnelCustomLocation = ref('')
+const selectedTargetArea = ref('Raleigh / Wake County')
+const customLocationPreset = ref('')
 
-// Map selected city/county to the funnel target area preset
+function goToContact(city?: string, county?: string) {
+  if (city && county) {
+    selectCity(city, county)
+  }
+  router.push({
+    path: '/contact',
+    query: {
+      area: selectedTargetArea.value,
+      location: customLocationPreset.value || (city ? `${city}, NC` : undefined)
+    }
+  })
+}
+
+// Map selected city/county to consultation area preset
 function selectCity(city: string, county: string) {
   if (activeCity.value === city) {
     activeCity.value = null
     activeCounty.value = null
-    funnelCustomLocation.value = ''
+    customLocationPreset.value = ''
     return
   }
 
   activeCity.value = city
   activeCounty.value = county
-  funnelCustomLocation.value = `${city}, NC`
+  customLocationPreset.value = `${city}, NC`
 
-  // Map to funnel preset
+  // Map to target area preset
   if (county.includes('Wake')) {
     if (['Cary', 'Apex', 'Holly Springs'].includes(city)) {
-      funnelTargetArea.value = 'Cary / Apex / Holly Springs'
+      selectedTargetArea.value = 'Cary / Apex / Holly Springs'
     } else if (['Zebulon', 'Wendell', 'Rolesville'].includes(city)) {
-      funnelTargetArea.value = 'Zebulon / Wendell / Rolesville'
+      selectedTargetArea.value = 'Zebulon / Wendell / Rolesville'
     } else {
-      funnelTargetArea.value = 'Raleigh / Wake County'
+      selectedTargetArea.value = 'Raleigh / Wake County'
     }
   } else if (county.includes('Durham')) {
-    funnelTargetArea.value = 'Durham / RTP Corridor'
+    selectedTargetArea.value = 'Durham / RTP Corridor'
   } else if (county.includes('Johnston')) {
-    funnelTargetArea.value = 'Clayton / Johnston County'
+    selectedTargetArea.value = 'Clayton / Johnston County'
   } else if (county.includes('Franklin') || county.includes('Granville')) {
-    funnelTargetArea.value = 'Franklin / Granville / Alamance Counties'
+    selectedTargetArea.value = 'Franklin / Granville / Alamance Counties'
   } else if (county.includes('Chatham') || county.includes('Orange') || county.includes('Alamance')) {
-    funnelTargetArea.value = 'Chapel Hill / Orange & Chatham Counties'
+    selectedTargetArea.value = 'Chapel Hill / Orange & Chatham Counties'
   } else {
-    funnelTargetArea.value = 'Other North Carolina Area / Open to Locations'
-  }
-}
-
-function scrollToFunnel(city?: string, county?: string) {
-  if (city && county) {
-    selectCity(city, county)
-  }
-  const el = document.getElementById('market-funnel')
-  if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    selectedTargetArea.value = 'Other North Carolina Area / Open to Locations'
   }
 }
 
 function clearSelection() {
   activeCity.value = null
   activeCounty.value = null
-  funnelCustomLocation.value = ''
+  customLocationPreset.value = ''
 }
 
 function clearFilters() {
@@ -163,14 +167,23 @@ const whatsappCityHref = computed(() => {
             <span class="status-count">
               {{ currentLocale === 'en' ? `Showing ${filteredMarketAreas.length} Region${filteredMarketAreas.length === 1 ? '' : 's'} · ${totalCitiesCount} Communities` : `Mostrando ${filteredMarketAreas.length} Región(es) · ${totalCitiesCount} Comunidades` }}
             </span>
-            <button
-              v-if="searchQuery || selectedRegion !== 'all' || activeCity"
-              type="button"
-              class="reset-filters-btn"
-              @click="clearFilters"
-            >
-              {{ currentLocale === 'en' ? 'Reset All Filters ↺' : 'Reiniciar Filtros ↺' }}
-            </button>
+            <div class="controls-status-actions">
+              <RouterLink
+                v-if="featureFlags.neighborhoodVibeMatcher"
+                to="/quiz"
+                class="quiz-pill-btn"
+              >
+                🧭 {{ currentLocale === 'en' ? 'Take Triangle Quiz' : 'Hacer Quiz de Zonas' }} →
+              </RouterLink>
+              <button
+                v-if="searchQuery || selectedRegion !== 'all' || activeCity"
+                type="button"
+                class="reset-filters-btn"
+                @click="clearFilters"
+              >
+                {{ currentLocale === 'en' ? 'Reset All Filters ↺' : 'Reiniciar Filtros ↺' }}
+              </button>
+            </div>
           </div>
         </div>
 
@@ -191,9 +204,9 @@ const whatsappCityHref = computed(() => {
               <button
                 type="button"
                 class="btn btn-primary spotlight-btn"
-                @click="scrollToFunnel()"
+                @click="goToContact()"
               >
-                🎯 {{ currentLocale === 'en' ? `Plan ${activeCity} Search in Funnel ↓` : `Plan para ${activeCity} en Formulario ↓` }}
+                🎯 {{ currentLocale === 'en' ? `Plan ${activeCity} Search →` : `Planificar para ${activeCity} →` }}
               </button>
               <a
                 :href="whatsappCityHref"
@@ -260,7 +273,7 @@ const whatsappCityHref = computed(() => {
               <button
                 type="button"
                 class="card-action-btn"
-                @click="scrollToFunnel(area.cities[0], area.county)"
+                @click="goToContact(area.cities[0], area.county)"
               >
                 {{ currentLocale === 'en' ? `Explore ${area.county.replace(', NC', '')} Homes & Builder Perks →` : `Explorar Opciones en ${area.county.replace(', NC', '')} →` }}
               </button>
@@ -281,14 +294,14 @@ const whatsappCityHref = computed(() => {
             <button type="button" class="btn btn-outline" @click="clearFilters">
               {{ currentLocale === 'en' ? 'Clear Search & Show All Areas' : 'Limpiar Búsqueda y Ver Todo' }}
             </button>
-            <button type="button" class="btn btn-primary" @click="scrollToFunnel()">
-              {{ currentLocale === 'en' ? 'Open Custom Location Planner ↓' : 'Abrir Planificador Personalizado ↓' }}
+            <button type="button" class="btn btn-primary" @click="goToContact()">
+              {{ currentLocale === 'en' ? 'Open Custom Location Planner →' : 'Abrir Planificador Personalizado →' }}
             </button>
           </div>
         </div>
       </div>
     </section>
-
+ 
     <!-- BUILDER INCENTIVES & BUYER/SELLER PROGRAMS -->
     <section class="section">
       <div class="container">
@@ -324,16 +337,6 @@ const whatsappCityHref = computed(() => {
             </RouterLink>
           </article>
         </div>
-      </div>
-    </section>
-
-    <!-- INTERACTIVE CLIENT FUNNEL WITH PRE-FILLED TARGET LOCATION -->
-    <section id="market-funnel" class="section">
-      <div class="container">
-        <ClientFunnelWidget
-          :initial-area="funnelTargetArea"
-          :initial-custom-location="funnelCustomLocation"
-        />
       </div>
     </section>
   </div>
@@ -436,21 +439,51 @@ const whatsappCityHref = computed(() => {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 0.75rem;
   font-size: 0.85rem;
   color: var(--text-muted);
   padding: 0 0.2rem;
+  flex-wrap: wrap;
+}
+
+.controls-status-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.quiz-pill-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: var(--accent-glow);
+  border: 1px solid var(--accent-primary);
+  border-radius: 9999px;
+  padding: 0.3rem 0.85rem;
+  text-decoration: none;
+  transition: var(--btn-transition);
+}
+
+.quiz-pill-btn:hover {
+  background: var(--accent-primary);
+  color: #ffffff;
+  transform: var(--btn-hover-transform);
 }
 
 .reset-filters-btn {
   background: none;
   border: none;
-  color: var(--accent-primary);
+  color: var(--text-muted);
   cursor: pointer;
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.84rem;
 }
 
 .reset-filters-btn:hover {
+  color: var(--text-primary);
   text-decoration: underline;
 }
 
@@ -767,22 +800,6 @@ const whatsappCityHref = computed(() => {
 .check-mark {
   color: var(--accent-emerald);
   font-weight: 700;
-}
-
-.pillar-btn {
-  margin-top: 0.65rem;
-}
-
-/* Animations */
-.spotlight-slide-enter-active,
-.spotlight-slide-leave-active {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.spotlight-slide-enter-from,
-.spotlight-slide-leave-to {
-  opacity: 0;
-  transform: translateY(-8px);
 }
 
 @media (max-width: 920px) {

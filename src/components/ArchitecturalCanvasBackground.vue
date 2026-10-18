@@ -95,7 +95,7 @@ const PAGE_LEDGERS: Record<string, string[]> = {
     'CORPORATE_EMAIL    = "maryin.dosramos@exprealty.com"',
     'INSTAGRAM_HANDLE   = "@maryin2ramos_realtor"',
     'LINKTREE_HUB       = "linktr.ee/maryin_realtor"',
-    'LINKEDIN_PROFILE   = "linkedin.com/in/maryin-estefania-dos-ramos-7303b395"',
+    'FACEBOOK_PROFILE   = "facebook.com/maryinestefania.dosramos"',
     'REALTOR_PROFILE    = "realtor.com/realestateagents/5e3363f167400900139fce8a"',
     'HOMESPOTTER_APP    = "hms.pt/ufaf"'
   ],

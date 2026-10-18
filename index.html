@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="color-scheme" content="light dark">
     <meta name="theme-color" content="#0b0f19">
     <title>Maryin Estefania Dos Ramos | Top NC Real Estate Broker · eXp Realty</title>
     <meta
@@ -16,27 +17,60 @@
         color: #f8fafc;
         margin: 0;
         padding: 0;
+        color-scheme: dark;
       }
       html[data-theme='light'], html[data-theme='light'] body {
         background-color: #f6f5f1;
         color: #292524;
+        color-scheme: only light;
       }
     </style>
     <script>
       (function() {
         try {
           var saved = localStorage.getItem('theme-preference');
-          var theme = saved === 'light' ? 'light' : 'dark';
+          var isLight = false;
+          if (saved === 'light') {
+            isLight = true;
+          } else if (saved === 'dark') {
+            isLight = false;
+          } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            isLight = true;
+          }
+          var theme = isLight ? 'light' : 'dark';
           document.documentElement.setAttribute('data-theme', theme);
           var metaTheme = document.querySelector('meta[name="theme-color"]');
-          if (theme === 'light') {
+          if (isLight) {
+            document.documentElement.style.colorScheme = 'only light';
             document.documentElement.style.backgroundColor = '#f6f5f1';
             document.documentElement.style.color = '#292524';
             if (metaTheme) metaTheme.setAttribute('content', '#f6f5f1');
           } else {
+            document.documentElement.style.colorScheme = 'dark';
             document.documentElement.style.backgroundColor = '#0b0f19';
             document.documentElement.style.color = '#f8fafc';
             if (metaTheme) metaTheme.setAttribute('content', '#0b0f19');
+          }
+
+          // Real-time device theme synchronization
+          if (window.matchMedia) {
+            var mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
+            var handleDeviceTheme = function(e) {
+              if (!localStorage.getItem('theme-preference')) {
+                var newLight = e.matches;
+                var newTheme = newLight ? 'light' : 'dark';
+                document.documentElement.setAttribute('data-theme', newTheme);
+                document.documentElement.style.colorScheme = newLight ? 'only light' : 'dark';
+                document.documentElement.style.backgroundColor = newLight ? '#f6f5f1' : '#0b0f19';
+                document.documentElement.style.color = newLight ? '#292524' : '#f8fafc';
+                if (metaTheme) metaTheme.setAttribute('content', newLight ? '#f6f5f1' : '#0b0f19');
+              }
+            };
+            if (mediaQuery.addEventListener) {
+              mediaQuery.addEventListener('change', handleDeviceTheme);
+            } else if (mediaQuery.addListener) {
+              mediaQuery.addListener(handleDeviceTheme);
+            }
           }
 
           var savedLocale = localStorage.getItem('maryin-locale');

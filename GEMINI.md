@@ -30,4 +30,5 @@ This file records both our **Standout Real Estate Website Design Memory** and **
 - **Eye-Friendly Light Mode & Rich Dark Mode:**
   - Light mode uses warm natural stone/paper canvases (`#f6f5f1` primary, `#edebe4` secondary), solid elevated cards (`#ffffff`), and deep warm charcoal typography (`#292524`).
   - Dark mode uses deep eXp midnight slate (`#0b0f19` primary, `#151e2e` elevated cards) with oceanic sky (`#38bdf8`) and warm champagne gold (`#f59e0b`) accents.
+- **No Internal Jargon in Client-Facing Copy:** Never use internal marketing terminology such as "Funnel" anywhere in user-facing UI copy, subtitles, labels, or placeholders. Always use client-centric phrasing like "Consultation Planner", "Custom Real Estate Plan", or "Formulario de Consulta".
 - **Git Safety:** Never run `git commit` or `git push` automatically.

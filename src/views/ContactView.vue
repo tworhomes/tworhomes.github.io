@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import { realtorProfile, t } from '@/data/realtorProfile'
 import ClientFunnelWidget from '@/components/ClientFunnelWidget.vue'
 import SocialHubSection from '@/components/SocialHubSection.vue'
+
+const route = useRoute()
 </script>
 
 <template>
@@ -20,7 +23,10 @@ import SocialHubSection from '@/components/SocialHubSection.vue'
           </p>
         </div>
 
-        <ClientFunnelWidget />
+        <ClientFunnelWidget
+          :initial-area="(route.query.area as string) || undefined"
+          :initial-custom-location="(route.query.location as string) || undefined"
+        />
 
         <!-- Office & License Verification Strip -->
         <div class="card office-strip">

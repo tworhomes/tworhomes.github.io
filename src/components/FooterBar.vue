@@ -1,7 +1,18 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { RouterLink } from 'vue-router'
-import { realtorProfile, currentLocale, t } from '@/data/realtorProfile'
+import { realtorProfile, featureFlags, currentLocale, t } from '@/data/realtorProfile'
 import SocialIcon from '@/components/SocialIcon.vue'
+
+const visibleBottomLinks = computed(() =>
+  realtorProfile.footer.bottomLinks.filter(
+    link => link.to !== '/quiz' || featureFlags.value.neighborhoodVibeMatcher
+  )
+)
+
+const visibleSocialChannels = computed(() =>
+  realtorProfile.socialChannels.filter(social => social.id !== 'linkedin')
+)
 </script>
 
 <template>
@@ -61,7 +72,7 @@ import SocialIcon from '@/components/SocialIcon.vue'
           {{ t(realtorProfile.footer.headings.socialAndPortals) }}
         </h3>
         <ul class="footer-list">
-          <li v-for="social in realtorProfile.socialChannels" :key="social.id">
+          <li v-for="social in visibleSocialChannels" :key="social.id">
             <a :href="social.url" target="_blank" rel="noopener noreferrer">
               <SocialIcon :name="social.id" :size="15" />
               <span>{{ social.platform }} ↗</span>
@@ -78,7 +89,7 @@ import SocialIcon from '@/components/SocialIcon.vue'
       </p>
       <div class="footer-bottom-links">
         <RouterLink
-          v-for="link in realtorProfile.footer.bottomLinks"
+          v-for="link in visibleBottomLinks"
           :key="link.to"
           :to="link.to"
         >

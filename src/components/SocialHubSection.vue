@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { realtorProfile, t } from '@/data/realtorProfile'
 import SocialIcon from '@/components/SocialIcon.vue'
 
 const copiedItem = ref<string | null>(null)
+
+// Exclude LinkedIn per client request
+const visibleSocialChannels = computed(() =>
+  realtorProfile.socialChannels.filter(channel => channel.id !== 'linkedin')
+)
 
 async function copyValue(key: string, value: string) {
   try {
@@ -35,7 +40,7 @@ async function copyValue(key: string, value: string) {
 
       <!-- Direct Phone, WhatsApp & Email Bar -->
       <div class="direct-contact-grid">
-        <div class="card direct-card whatsapp-highlight-card">
+        <div v-tilt class="card direct-card whatsapp-highlight-card">
           <div class="direct-card-top">
             <span class="tag tag-gold">{{ t(realtorProfile.socialHub.cards.whatsapp.badge) }}</span>
             <span class="direct-icon direct-icon-whatsapp">
@@ -54,7 +59,7 @@ async function copyValue(key: string, value: string) {
           </div>
         </div>
 
-        <div class="card direct-card">
+        <div v-tilt class="card direct-card">
           <div class="direct-card-top">
             <span class="tag">{{ t(realtorProfile.socialHub.cards.phone.badge) }}</span>
             <span class="direct-icon direct-icon-phone">
@@ -84,7 +89,7 @@ async function copyValue(key: string, value: string) {
           </div>
         </div>
 
-        <div class="card direct-card">
+        <div v-tilt class="card direct-card">
           <div class="direct-card-top">
             <span class="tag">{{ t(realtorProfile.socialHub.cards.email.badge) }}</span>
             <span class="direct-icon direct-icon-email">
@@ -107,8 +112,9 @@ async function copyValue(key: string, value: string) {
       <!-- Social Media & Real Estate Portals Grid -->
       <div class="social-grid">
         <a
-          v-for="channel in realtorProfile.socialChannels"
+          v-for="channel in visibleSocialChannels"
           :key="channel.id"
+          v-tilt
           :href="channel.url"
           target="_blank"
           rel="noopener noreferrer"
