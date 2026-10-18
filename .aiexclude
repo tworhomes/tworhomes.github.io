@@ -1,0 +1,12 @@
+# Exclude heavy directories and lockfiles from Gemini Code Assist / AI indexing
+# Reference: https://support.google.com/gemini/thread/414435357/gemini-code-assist-slow-in-vscode
+node_modules/
+dist/
+dist-ssr/
+coverage/
+.git/
+*.log
+*.tsbuildinfo
+package-lock.json
+pnpm-lock.yaml
+yarn.lock

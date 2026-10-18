@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0f19">
+    <title>Maryin Estefania Dos Ramos | Top NC Real Estate Broker · eXp Realty</title>
+    <meta
+      name="description"
+      content="Maryin Estefania Dos Ramos — Top-producing North Carolina Real Estate Broker with eXp Realty ($17M+ career volume, 53+ closed homes). Serving Raleigh, Durham, Cary & the Research Triangle in English & Español."
+    >
+    <style>
+      /* Immediate anti-FOUC canvas background to prevent light-to-dark flash on reload */
+      html, body {
+        background-color: #0b0f19;
+        color: #f8fafc;
+        margin: 0;
+        padding: 0;
+      }
+      html[data-theme='light'], html[data-theme='light'] body {
+        background-color: #f6f5f1;
+        color: #292524;
+      }
+    </style>
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem('theme-preference');
+          var theme = saved === 'light' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          var metaTheme = document.querySelector('meta[name="theme-color"]');
+          if (theme === 'light') {
+            document.documentElement.style.backgroundColor = '#f6f5f1';
+            document.documentElement.style.color = '#292524';
+            if (metaTheme) metaTheme.setAttribute('content', '#f6f5f1');
+          } else {
+            document.documentElement.style.backgroundColor = '#0b0f19';
+            document.documentElement.style.color = '#f8fafc';
+            if (metaTheme) metaTheme.setAttribute('content', '#0b0f19');
+          }
+
+          var savedLocale = localStorage.getItem('maryin-locale');
+          if (!savedLocale) {
+            var langs = navigator.languages || [navigator.language || ''];
+            for (var i = 0; i < langs.length; i++) {
+              if (langs[i] && langs[i].toLowerCase().indexOf('es') === 0) {
+                savedLocale = 'es';
+                break;
+              }
+            }
+          }
+          if (savedLocale) {
+            document.documentElement.setAttribute('lang', savedLocale);
+          }
+        } catch (e) {}
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
