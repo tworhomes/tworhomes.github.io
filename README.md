@@ -13,6 +13,14 @@ A Vue 3 + TypeScript client-acquisition and personal brand website built for **M
 - **Eye-Friendly Light & Dark Themes + Dreamy Nebula Canvas (`ArchitecturalCanvasBackground.vue`):** Follows Aaron Fleshner's motion and theme standards (`GEMINI.md`).
 - **Omnichannel Social & Portal Directory (`SocialHubSection.vue`):** Direct links to Instagram (`@maryin2ramos_realtor`), Facebook, YouTube, Zillow, Realtor.com, Homes.com, phone `(919) 771-7755`, and emails.
 
+## 🎨 Theming Architecture
+
+The site uses a dynamic, strongly-typed **Theme Object system** that synchronizes CSS custom properties, `<meta name="theme-color">`, and animated canvas telemetry in real time:
+
+- **Built-in Presets:** Midnight Slate (eXp dark flagship), Warm Stone (executive light paper), Emerald Oaks (Carolina pines dark), Coastal Breeze (light Carolina coast), Champagne Onyx (ultra-luxury dark).
+- **Navigation Menu:** Visitors can toggle Light/Dark with 1 click or open the Palette dropdown (`🎨`) to switch palettes.
+- **Developer Guide:** See [**`THEMING.md`**](./THEMING.md) for full instructions on adding new themes, modifying palettes, programmatic usage with `useTheme()`, and DevTools shortcuts (`window.__THEME__`).
+
 ## Development
 
 ```bash

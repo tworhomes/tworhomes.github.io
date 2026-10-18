@@ -12,6 +12,10 @@ export interface FeatureFlags {
   cardTilt: boolean
   /** Specular reflection sheen effect across cards following the cursor */
   cardSheen: boolean
+  /** Theme palette selector menu button in navigation bar */
+  themePalettePicker: boolean
+  /** Quick 1-click Light / Dark mode toggle button in navigation bar */
+  themeToggle: boolean
   /** @deprecated Kept for backwards compatibility */
   luxuryCardTilt?: boolean
 }
@@ -75,5 +79,44 @@ export interface ImpactMilestone {
 export interface QuickFact {
   label: BilingualText
   value: string
+}
+
+export interface ThemeCanvasColors {
+  /** Ambient watermark text color in RGB channels ('R, G, B') */
+  ambient: string
+  /** Cursor interactive highlight color in RGB channels ('R, G, B') */
+  highlight: string
+}
+
+export interface ThemeColors {
+  bgPrimary: string
+  bgSecondary: string
+  bgElevated: string
+  bgGlass: string
+  textPrimary: string
+  textSecondary: string
+  textMuted: string
+  borderSubtle: string
+  borderHover: string
+  accentPrimary: string
+  accentSecondary: string
+  accentGold: string
+  accentGoldGlow: string
+  accentEmerald: string
+  accentGlow: string
+  ambientGlow2: string
+  shadowCard: string
+  btnShadow: string
+}
+
+export interface ThemeDefinition {
+  id: string
+  name: BilingualText | string
+  description?: BilingualText | string
+  colorScheme: 'light' | 'dark'
+  metaColor: string
+  canvasColors: ThemeCanvasColors
+  colors: ThemeColors
+  customVariables?: Record<string, string>
 }
 

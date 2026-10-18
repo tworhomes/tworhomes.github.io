@@ -17,7 +17,14 @@
  *  - pagesContent.ts     -> Hero copy, About, Markets, Contact, Footer & consultation planner
  */
 
-import { featureFlags, toggleNeighborhoodVibeMatcher, toggleCardTilt, toggleCardSheen } from './featureFlags'
+import {
+  featureFlags,
+  toggleNeighborhoodVibeMatcher,
+  toggleCardTilt,
+  toggleCardSheen,
+  toggleThemePalettePicker,
+  toggleThemeToggle
+} from './featureFlags'
 import { currentLocale, setLocale, toggleLocale, t } from './i18n'
 import { coreAgent } from './coreAgent'
 import { stats, bio, servicePillarsHeader, servicePillars, commitmentsHeader, clientCommitments } from './statsAndBio'
@@ -55,8 +62,20 @@ export { currentLocale, setLocale, toggleLocale, t }
 export type { Locale, BilingualText } from './types'
 
 // Re-export feature flags and utilities
-export { featureFlags, toggleNeighborhoodVibeMatcher, toggleCardTilt, toggleCardSheen }
+export {
+  featureFlags,
+  toggleNeighborhoodVibeMatcher,
+  toggleCardTilt,
+  toggleCardSheen,
+  toggleThemePalettePicker,
+  toggleThemeToggle
+}
 export type { FeatureFlags } from './types'
+
+// Re-export theme utilities and definitions
+export { useTheme, setTheme, toggleTheme, registerTheme, applyTheme } from '@/composables/useTheme'
+export { builtinThemes, DEFAULT_DARK_THEME_ID, DEFAULT_LIGHT_THEME_ID } from './themes'
+export type { ThemeDefinition, ThemeColors, ThemeCanvasColors } from './types'
 
 // Re-export modular domain data for direct imports if preferred
 export * from './coreAgent'

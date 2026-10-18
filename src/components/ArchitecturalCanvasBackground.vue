@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useTheme } from '@/composables/useTheme'
 
 const route = useRoute()
+const { currentTheme, isLight } = useTheme()
 const canvasRef = ref<HTMLCanvasElement | null>(null)
 
 // ============================================================================
@@ -247,11 +249,11 @@ function renderLoop() {
 
   smoothScrollY += (targetScrollY - smoothScrollY) * CONFIG.parallax.inertia
 
-  const isLight = document.documentElement.getAttribute('data-theme') === 'light'
-  const baseAlpha = isLight ? CONFIG.opacity.baseLight : CONFIG.opacity.baseDark
-  const peakGlow = isLight ? CONFIG.opacity.peakGlowLight : CONFIG.opacity.peakGlowDark
-  const ambientRgb = isLight ? CONFIG.colors.lightMode.ambient : CONFIG.colors.darkMode.ambient
-  const highlightRgb = isLight ? CONFIG.colors.lightMode.highlight : CONFIG.colors.darkMode.core
+  const activeIsLight = isLight.value
+  const baseAlpha = activeIsLight ? CONFIG.opacity.baseLight : CONFIG.opacity.baseDark
+  const peakGlow = activeIsLight ? CONFIG.opacity.peakGlowLight : CONFIG.opacity.peakGlowDark
+  const ambientRgb = currentTheme.value.canvasColors?.ambient || (activeIsLight ? CONFIG.colors.lightMode.ambient : CONFIG.colors.darkMode.ambient)
+  const highlightRgb = currentTheme.value.canvasColors?.highlight || (activeIsLight ? CONFIG.colors.lightMode.highlight : CONFIG.colors.darkMode.core)
 
   const activeFontSize = isMobile ? 10.5 : CONFIG.typography.fontSize
   const activeLineHeight = isMobile ? 18 : CONFIG.typography.lineHeight

@@ -1,23 +1,15 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from 'vue'
+import { ref, onMounted, onUnmounted, computed, watch } from 'vue'
 import { RouterLink, useRoute } from 'vue-router'
 import { realtorProfile, featureFlags, currentLocale, toggleLocale, t } from '@/data/realtorProfile'
+import { useTheme } from '@/composables/useTheme'
 
 const route = useRoute()
-function getInitialTheme(): boolean {
-  if (typeof window === 'undefined') return false
-  const saved = localStorage.getItem('theme-preference')
-  if (saved === 'light') return true
-  if (saved === 'dark') return false
-  return Boolean(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches)
-}
+const { isLight, toggleTheme, currentTheme, currentThemeId, availableThemes, setTheme } = useTheme()
 
-const isLight = ref(
-  typeof document !== 'undefined'
-    ? (document.documentElement.getAttribute('data-theme') === 'light' || getInitialTheme())
-    : false
-)
 const mobileMenuOpen = ref(false)
+const themeMenuOpen = ref(false)
+const themePickerRef = ref<HTMLElement | null>(null)
 
 const navItems = computed(() => {
   const items = [
@@ -50,74 +42,40 @@ const navItems = computed(() => {
   return items
 })
 
-function applyTheme(light: boolean) {
-  const theme = light ? 'light' : 'dark'
-  document.documentElement.setAttribute('data-theme', theme)
-  document.documentElement.style.colorScheme = light ? 'only light' : 'dark'
-  document.documentElement.style.backgroundColor = light ? '#f6f5f1' : '#0b0f19'
-  document.documentElement.style.color = light ? '#292524' : '#f8fafc'
-  const metaTheme = document.querySelector('meta[name="theme-color"]')
-  if (metaTheme) metaTheme.setAttribute('content', light ? '#f6f5f1' : '#0b0f19')
-}
-
-function toggleTheme() {
-  document.documentElement.classList.add('theme-transition')
-  isLight.value = !isLight.value
-  localStorage.setItem('theme-preference', isLight.value ? 'light' : 'dark')
-  applyTheme(isLight.value)
-  setTimeout(() => {
-    document.documentElement.classList.remove('theme-transition')
-  }, 350)
-}
-
-onMounted(() => {
-  // Sync state with DOM/device
-  if (typeof document !== 'undefined') {
-    const currentTheme = document.documentElement.getAttribute('data-theme')
-    if (currentTheme) {
-      isLight.value = currentTheme === 'light'
-    } else {
-      isLight.value = getInitialTheme()
-      applyTheme(isLight.value)
-    }
-  }
-
-  // Listen to device preference changes in real-time
-  if (typeof window !== 'undefined' && window.matchMedia) {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)')
-    const handleDeviceThemeChange = (e: MediaQueryListEvent) => {
-      // When the user toggles light/dark mode in their phone/OS control center,
-      // update the site theme immediately to follow their device
-      isLight.value = e.matches
-      applyTheme(e.matches)
-      localStorage.removeItem('theme-preference')
-    }
-
-    if (mediaQuery.addEventListener) {
-      mediaQuery.addEventListener('change', handleDeviceThemeChange)
-    } else if ('addListener' in mediaQuery) {
-      (mediaQuery as any).addListener(handleDeviceThemeChange)
-    }
-  }
-})
-
 function closeMobileMenu() {
   mobileMenuOpen.value = false
 }
+
+function selectTheme(themeId: string) {
+  setTheme(themeId)
+  themeMenuOpen.value = false
+}
+
+function handleClickOutside(e: MouseEvent) {
+  if (themePickerRef.value && !themePickerRef.value.contains(e.target as Node)) {
+    themeMenuOpen.value = false
+  }
+}
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    window.addEventListener('click', handleClickOutside)
+  }
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('click', handleClickOutside)
+  }
+})
 
 watch(
   () => route.fullPath,
   () => {
     mobileMenuOpen.value = false
+    themeMenuOpen.value = false
   }
 )
-
-onMounted(() => {
-  const saved = localStorage.getItem('theme-preference')
-  const shouldBeLight = saved === 'light'
-  isLight.value = shouldBeLight
-  applyTheme(shouldBeLight)
-})
 </script>
 
 <template>
@@ -164,10 +122,12 @@ onMounted(() => {
         </button>
 
         <button
+          v-if="featureFlags.themeToggle"
           type="button"
           class="theme-btn"
           :aria-label="isLight ? 'Switch to dark mode' : 'Switch to light mode'"
-          @click="toggleTheme"
+          :title="isLight ? 'Switch to dark mode' : 'Switch to light mode'"
+          @click="toggleTheme()"
         >
           <svg v-if="isLight" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
@@ -184,6 +144,68 @@ onMounted(() => {
             <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
           </svg>
         </button>
+
+        <!-- Theme Palette Menu -->
+        <div
+          v-if="featureFlags.themePalettePicker"
+          class="theme-picker-wrapper"
+          ref="themePickerRef"
+        >
+          <button
+            type="button"
+            class="theme-btn theme-palette-btn"
+            :class="{ active: themeMenuOpen }"
+            :aria-label="currentLocale === 'en' ? 'Select theme palette' : 'Seleccionar paleta de temas'"
+            :title="currentLocale === 'en' ? 'Theme Palettes' : 'Paletas de Temas'"
+            @click="themeMenuOpen = !themeMenuOpen"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+              <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.563-2.512 5.563-5.563C22 6.5 17.5 2 12 2z"/>
+            </svg>
+          </button>
+
+          <Transition name="fade-slide">
+            <div v-if="themeMenuOpen" class="theme-dropdown-menu">
+              <div class="theme-dropdown-header">
+                <span class="theme-dropdown-title">
+                  {{ currentLocale === 'en' ? 'Theme Palettes' : 'Paletas de Temas' }}
+                </span>
+                <span class="theme-current-badge">
+                  {{ currentTheme.colorScheme === 'light' ? '☀️ Light' : '🌙 Dark' }}
+                </span>
+              </div>
+              <div class="theme-dropdown-list">
+                <button
+                  v-for="themeItem in availableThemes"
+                  :key="themeItem.id"
+                  type="button"
+                  class="theme-dropdown-item"
+                  :class="{ selected: currentThemeId === themeItem.id }"
+                  @click="selectTheme(themeItem.id)"
+                >
+                  <div class="theme-color-preview">
+                    <span class="color-dot" :style="{ backgroundColor: themeItem.colors.bgPrimary, borderColor: themeItem.colors.borderSubtle }"></span>
+                    <span class="color-dot" :style="{ backgroundColor: themeItem.colors.accentPrimary }"></span>
+                    <span class="color-dot" :style="{ backgroundColor: themeItem.colors.accentGold }"></span>
+                  </div>
+                  <div class="theme-meta">
+                    <span class="theme-name">
+                      {{ typeof themeItem.name === 'string' ? themeItem.name : t(themeItem.name) }}
+                    </span>
+                    <span class="theme-scheme-tag">
+                      {{ themeItem.colorScheme }}
+                    </span>
+                  </div>
+                  <span v-if="currentThemeId === themeItem.id" class="theme-active-indicator">✓</span>
+                </button>
+              </div>
+            </div>
+          </Transition>
+        </div>
 
         <RouterLink to="/contact" class="btn btn-primary nav-cta">
           {{ currentLocale === 'en' ? 'Contact' : 'Contacto' }}
@@ -203,6 +225,26 @@ onMounted(() => {
         <span>{{ item.label }}</span>
         <span class="mobile-link-arrow">→</span>
       </RouterLink>
+
+      <!-- Mobile Theme Palettes -->
+      <div v-if="featureFlags.themePalettePicker" class="mobile-theme-section">
+        <span class="mobile-theme-label">
+          {{ currentLocale === 'en' ? 'Theme Palette' : 'Paleta de Tema' }}
+        </span>
+        <div class="mobile-theme-chips">
+          <button
+            v-for="themeItem in availableThemes"
+            :key="themeItem.id"
+            type="button"
+            class="mobile-theme-chip"
+            :class="{ active: currentThemeId === themeItem.id }"
+            @click="selectTheme(themeItem.id)"
+          >
+            <span class="chip-color-dot" :style="{ backgroundColor: themeItem.colors.accentPrimary }"></span>
+            <span>{{ typeof themeItem.name === 'string' ? themeItem.name : t(themeItem.name) }}</span>
+          </button>
+        </div>
+      </div>
 
       <div class="mobile-drawer-actions">
         <a :href="realtorProfile.phoneHref" class="btn btn-outline" @click="closeMobileMenu">
@@ -235,6 +277,7 @@ onMounted(() => {
       </div>
     </div>
   </header>
+
 </template>
 
 <style scoped>
@@ -376,6 +419,190 @@ onMounted(() => {
 .lang-btn:active {
   transform: var(--btn-active-transform);
   transition-duration: 0.12s;
+}
+
+/* 🎨 Theme Picker Dropdown Popover */
+.theme-picker-wrapper {
+  position: relative;
+}
+
+.theme-palette-btn.active {
+  color: var(--accent-primary);
+  border-color: var(--accent-primary);
+  background: var(--accent-glow);
+}
+
+.theme-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 275px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-card);
+  padding: 0.75rem;
+  z-index: 1000;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.theme-dropdown-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0.35rem 0.55rem;
+  border-bottom: 1px solid var(--border-subtle);
+  margin-bottom: 0.45rem;
+}
+
+.theme-dropdown-title {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.theme-current-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  background: var(--accent-glow);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+}
+
+.theme-dropdown-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.theme-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  text-align: left;
+  transition: var(--btn-transition);
+  font-family: var(--font-sans);
+}
+
+.theme-dropdown-item:hover {
+  background: var(--accent-glow);
+  border-color: var(--border-hover);
+  transform: translateY(-1px);
+}
+
+.theme-dropdown-item.selected {
+  background: var(--accent-glow);
+  border-color: var(--accent-primary);
+}
+
+.theme-color-preview {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.color-dot {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+}
+
+.theme-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.theme-name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.theme-scheme-tag {
+  font-size: 0.68rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.theme-active-indicator {
+  font-weight: 700;
+  color: var(--accent-primary);
+  font-size: 0.95rem;
+}
+
+.mobile-theme-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.75rem 0;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
+  margin: 0.35rem 0;
+}
+
+.mobile-theme-label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+}
+
+.mobile-theme-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.mobile-theme-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.42rem 0.7rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--btn-transition);
+}
+
+.mobile-theme-chip.active {
+  border-color: var(--accent-primary);
+  background: var(--accent-glow);
+  color: var(--accent-primary);
+  font-weight: 600;
+}
+
+.chip-color-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
 }
 
 .nav-phone {
