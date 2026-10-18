@@ -249,7 +249,7 @@ const realtorChannel = computed(() =>
     </section>
 
     <!-- WHAT TO EXPECT / CLIENT COMMITMENTS -->
-    <section class="section">
+    <section class="section commitments-section">
       <div class="container">
         <div class="section-header">
           <span class="eyebrow">
@@ -480,15 +480,15 @@ const realtorChannel = computed(() =>
 
 .pathways-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
 }
 
 .pathway-card {
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
-  padding: 1.65rem 1.45rem;
+  gap: 0.95rem;
+  padding: 1.85rem 1.65rem;
   background: var(--bg-card);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);

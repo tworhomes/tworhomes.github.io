@@ -16,6 +16,8 @@ export interface FeatureFlags {
   themePalettePicker: boolean
   /** Quick 1-click Light / Dark mode toggle button in navigation bar */
   themeToggle: boolean
+  /** Executive subtle premium animations (staggered hero entrance, scroll reveals, breathing pulse, button sheen) */
+  premiumAnimations: boolean
   /** @deprecated Kept for backwards compatibility */
   luxuryCardTilt?: boolean
 }

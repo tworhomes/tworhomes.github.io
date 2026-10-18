@@ -23,7 +23,8 @@ import {
   toggleCardTilt,
   toggleCardSheen,
   toggleThemePalettePicker,
-  toggleThemeToggle
+  toggleThemeToggle,
+  togglePremiumAnimations
 } from './featureFlags'
 import { currentLocale, setLocale, toggleLocale, t } from './i18n'
 import { coreAgent } from './coreAgent'
@@ -68,7 +69,8 @@ export {
   toggleCardTilt,
   toggleCardSheen,
   toggleThemePalettePicker,
-  toggleThemeToggle
+  toggleThemeToggle,
+  togglePremiumAnimations
 }
 export type { FeatureFlags } from './types'
 

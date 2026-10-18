@@ -11,6 +11,7 @@ A Vue 3 + TypeScript client-acquisition and personal brand website built for **M
   - Supports 1-click Email (`mailto:maryinhomes@gmail.com`), 1-click SMS (`sms:9197717755`), 1-click WhatsApp, and 1-click Summary Copy.
 - **1-Click English / Español Toggle:** Instant site-wide bilingual switching persisted in `localStorage`.
 - **Eye-Friendly Light & Dark Themes + Dreamy Nebula Canvas (`ArchitecturalCanvasBackground.vue`):** Follows Aaron Fleshner's motion and theme standards (`GEMINI.md`).
+- **Subtle Premium Animations (`featureFlags.premiumAnimations`):** Staggered hero entrance, breathing status aura pulse, primary button light sweep, and smooth scroll reveal system (`v-reveal`). Controlled by a dedicated feature flag and disabled automatically when `prefers-reduced-motion` is active.
 - **Omnichannel Social & Portal Directory (`SocialHubSection.vue`):** Direct links to Instagram (`@maryin2ramos_realtor`), Facebook, YouTube, Zillow, Realtor.com, Homes.com, phone `(919) 771-7755`, and emails.
 
 ## 🎨 Theming Architecture

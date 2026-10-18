@@ -43,7 +43,8 @@ export const featureFlags = ref<FeatureFlags>({
   cardSheen: false,
   luxuryCardTilt: false,
   themePalettePicker: getInitialFlag('themePicker', 'feature-flag-theme-picker', false),
-  themeToggle: getInitialFlag('themeToggle', 'feature-flag-theme-toggle', true)
+  themeToggle: getInitialFlag('themeToggle', 'feature-flag-theme-toggle', true),
+  premiumAnimations: getInitialFlag('animations', 'feature-flag-animations', true)
 })
 
 export function toggleNeighborhoodVibeMatcher(enable?: boolean) {
@@ -76,6 +77,14 @@ export function toggleThemeToggle(enable?: boolean) {
   featureFlags.value.themeToggle = nextVal
   if (typeof localStorage !== 'undefined') {
     localStorage.setItem('feature-flag-theme-toggle', String(nextVal))
+  }
+}
+
+export function togglePremiumAnimations(enable?: boolean) {
+  const nextVal = enable !== undefined ? enable : !featureFlags.value.premiumAnimations
+  featureFlags.value.premiumAnimations = nextVal
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem('feature-flag-animations', String(nextVal))
   }
 }
 

@@ -401,3 +401,179 @@ a {
     background: radial-gradient(circle 320px at var(--sheen-x, 50%) var(--sheen-y, 50%), rgba(245, 158, 11, 0.16), transparent 70%);
   }
 }
+
+/* ============================================================================
+   ✨ EXECUTIVE SUBTLE PREMIUM ANIMATIONS
+   Controlled by featureFlags.value.premiumAnimations (html.feature-animations)
+   Silky curves: cubic-bezier(0.16, 1, 0.3, 1), dreamy, fluid & non-punchy
+   ============================================================================ */
+
+/* 1. Subtle Living Status Pulse */
+html.feature-animations .status-dot {
+  position: relative;
+}
+
+html.feature-animations .status-dot::after {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1.5px solid var(--accent-emerald);
+  opacity: 0.7;
+  animation: statusAuraPulse 3.2s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes statusAuraPulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.75;
+  }
+  45% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.65);
+    opacity: 0;
+  }
+}
+
+/* 2. Primary Button Specular Light Sweep */
+html.feature-animations .btn-primary {
+  position: relative;
+  overflow: hidden;
+}
+
+html.feature-animations .btn-primary::after {
+  content: '';
+  position: absolute;
+  top: -60%;
+  left: -80%;
+  width: 50%;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.24) 50%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.feature-animations .btn-primary:hover::after {
+  opacity: 1;
+  transform: rotate(25deg) translateX(360%);
+}
+
+/* 3. Hero Staggered Entrance */
+@keyframes premiumEntrance {
+  0% {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+html.feature-animations .hero-section .status-pill {
+  animation: premiumEntrance 0.55s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both;
+}
+
+html.feature-animations .hero-section .hero-eyebrow {
+  animation: premiumEntrance 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both;
+}
+
+html.feature-animations .hero-section .hero-title {
+  animation: premiumEntrance 0.65s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both;
+}
+
+html.feature-animations .hero-section .hero-subtitle {
+  animation: premiumEntrance 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+html.feature-animations .hero-section .hero-cta-row {
+  animation: premiumEntrance 0.75s cubic-bezier(0.16, 1, 0.3, 1) 0.32s both;
+}
+
+html.feature-animations .hero-section .hero-quick-links {
+  animation: premiumEntrance 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.40s both;
+}
+
+html.feature-animations .hero-section .hero-portrait-col {
+  animation: premiumEntrance 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.20s both;
+}
+
+/* 4. Hero Portrait Card Ambient Presence */
+html.feature-animations .portrait-card {
+  box-shadow: var(--shadow-card), 0 0 36px -12px var(--ambient-glow-2);
+  transition: transform var(--transition-speed) var(--transition-ease),
+              box-shadow var(--transition-speed) var(--transition-ease),
+              border-color var(--transition-speed) var(--transition-ease);
+}
+
+html.feature-animations .portrait-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card), 0 0 44px -8px var(--accent-glow);
+}
+
+/* 5. Subtle Interactive Hover Lifts & Ambient Card Glow */
+html.feature-animations .card {
+  transition: transform var(--transition-speed) var(--transition-ease),
+              box-shadow var(--transition-speed) var(--transition-ease),
+              border-color var(--transition-speed) var(--transition-ease);
+}
+
+html.feature-animations .card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card), 0 0 28px -8px var(--accent-glow);
+}
+
+/* 6. Subtle Interactive Arrow & Pill Nudge */
+.quick-pill,
+.pathway-btn,
+.mobile-link {
+  transition: var(--btn-transition);
+}
+
+.quick-pill span,
+.pathway-btn span,
+.mobile-link-arrow {
+  display: inline-block;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.quick-pill:hover span:last-child {
+  transform: translate(2px, -2px);
+}
+
+.pathway-btn:hover span {
+  transform: translateX(3px);
+}
+
+.mobile-link:hover .mobile-link-arrow {
+  transform: translateX(3px);
+}
+
+/* 7. Ambient Card Hover Bloom */
+html.feature-animations .card:hover {
+  box-shadow: var(--shadow-card), 0 0 28px -8px var(--accent-glow);
+}
+
+/* 8. Reduced Motion Accessibility */
+@media (prefers-reduced-motion: reduce) {
+  html.feature-animations *,
+  html.feature-animations *::before,
+  html.feature-animations *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
