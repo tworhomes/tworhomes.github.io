@@ -9,6 +9,10 @@ const instagramChannel = computed(() =>
   realtorProfile.socialChannels.find(s => s.id === 'instagram')
 )
 
+const facebookChannel = computed(() =>
+  realtorProfile.socialChannels.find(s => s.id === 'facebook')
+)
+
 const realtorChannel = computed(() =>
   realtorProfile.socialChannels.find(s => s.id === 'realtor')
 )
@@ -72,10 +76,20 @@ const realtorChannel = computed(() =>
               :href="instagramChannel.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="quick-pill"
+              class="quick-pill quick-pill-instagram"
             >
               <SocialIcon name="instagram" :size="14" />
               <span>{{ instagramChannel.handle }} (52K+) ↗</span>
+            </a>
+            <a
+              v-if="facebookChannel"
+              :href="facebookChannel.url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="quick-pill quick-pill-facebook"
+            >
+              <SocialIcon name="facebook" :size="14" />
+              <span>Facebook ↗</span>
             </a>
             <a
               v-if="realtorChannel"
@@ -128,24 +142,6 @@ const realtorChannel = computed(() =>
       </div>
     </section>
 
-    <!-- AUTHORITY & PRODUCTION METRICS BAR -->
-    <section class="stats-section">
-      <div class="container">
-        <div class="stats-grid">
-          <div
-            v-for="stat in realtorProfile.stats"
-            :key="stat.value"
-            v-tilt
-            class="card stat-card"
-          >
-            <p class="stat-value">{{ stat.value }}</p>
-            <h3 class="stat-label">{{ t(stat.label) }}</h3>
-            <p class="stat-detail">{{ t(stat.detail) }}</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- DIRECT DOORS TO EVERY PART OF THE SITE -->
     <section class="section pathways-section">
       <div class="container">
@@ -158,13 +154,32 @@ const realtorChannel = computed(() =>
           </h2>
           <p class="section-subtitle">
             {{ currentLocale === 'en'
-              ? 'Direct doorways into Maryin’s tailored community quiz, 8-county market guide, client closing stories, and bespoke consultation.'
-              : 'Acceso directo al test de comunidades, guía de 8 condados, historias de éxito y consulta personalizada con Maryin.'
+              ? 'Direct doorways into Maryin’s bespoke consultation, tailored community quiz, and 8-county market guide.'
+              : 'Acceso directo a la consulta personalizada con Maryin, test de comunidades y guía de 8 condados.'
             }}
           </p>
         </div>
 
         <div class="pathways-grid">
+          <article v-tilt class="card pathway-card pathway-card-highlight">
+            <div class="pathway-top">
+              <span class="pathway-icon">✨</span>
+              <span class="tag tag-gold">{{ currentLocale === 'en' ? 'VIP Advisory' : 'Asesoría VIP' }}</span>
+            </div>
+            <h3 class="pathway-title">
+              {{ currentLocale === 'en' ? 'Start Your Journey' : 'Comienza Tu Plan' }}
+            </h3>
+            <p class="pathway-desc">
+              {{ currentLocale === 'en'
+                ? 'Connect directly to plan your home search, receive builder representation, or request a bespoke home valuation CMA.'
+                : 'Planifica tu compra de casa, recibe asesoría para casas nuevas o solicita una valoración CMA de tu propiedad.'
+              }}
+            </p>
+            <RouterLink to="/contact" class="btn btn-primary pathway-btn">
+              <span>{{ currentLocale === 'en' ? 'Start Consultation' : 'Iniciar Consulta' }} →</span>
+            </RouterLink>
+          </article>
+
           <article
             v-if="featureFlags.neighborhoodVibeMatcher"
             v-tilt
@@ -204,44 +219,6 @@ const realtorChannel = computed(() =>
             </p>
             <RouterLink to="/markets" class="btn btn-outline pathway-btn">
               <span>{{ currentLocale === 'en' ? 'Explore Markets' : 'Ver Mercados' }} →</span>
-            </RouterLink>
-          </article>
-
-          <article v-tilt class="card pathway-card">
-            <div class="pathway-top">
-              <span class="pathway-icon">⭐</span>
-              <span class="tag tag-emerald">{{ currentLocale === 'en' ? '53+ Closed Homes' : '53+ Casas Vendidas' }}</span>
-            </div>
-            <h3 class="pathway-title">
-              {{ currentLocale === 'en' ? 'Track Record & Stories' : 'Trayectoria e Historias' }}
-            </h3>
-            <p class="pathway-desc">
-              {{ currentLocale === 'en'
-                ? 'Learn about Maryin’s bilingual standards, verified $17M+ sales volume, and real client closing table victories.'
-                : 'Conoce los estándares bilingües de Maryin, más de $17M en volumen y victorias reales de clientes.'
-              }}
-            </p>
-            <RouterLink to="/about" class="btn btn-outline pathway-btn">
-              <span>{{ currentLocale === 'en' ? 'Read Maryin’s Story' : 'Conoce a Maryin' }} →</span>
-            </RouterLink>
-          </article>
-
-          <article v-tilt class="card pathway-card pathway-card-highlight">
-            <div class="pathway-top">
-              <span class="pathway-icon">✨</span>
-              <span class="tag tag-gold">{{ currentLocale === 'en' ? 'VIP Advisory' : 'Asesoría VIP' }}</span>
-            </div>
-            <h3 class="pathway-title">
-              {{ currentLocale === 'en' ? 'Start Your Journey' : 'Comienza Tu Plan' }}
-            </h3>
-            <p class="pathway-desc">
-              {{ currentLocale === 'en'
-                ? 'Connect directly to plan your home search, receive builder representation, or request a bespoke home valuation CMA.'
-                : 'Planifica tu compra de casa, recibe asesoría para casas nuevas o solicita una valoración CMA de tu propiedad.'
-              }}
-            </p>
-            <RouterLink to="/contact" class="btn btn-primary pathway-btn">
-              <span>{{ currentLocale === 'en' ? 'Start Consultation' : 'Iniciar Consulta' }} →</span>
             </RouterLink>
           </article>
         </div>
@@ -369,6 +346,16 @@ const realtorChannel = computed(() =>
   color: #10b981;
 }
 
+.quick-pill-facebook:hover {
+  border-color: #1877f2;
+  color: #1877f2;
+}
+
+.quick-pill-instagram:hover {
+  border-color: #e1306c;
+  color: #e1306c;
+}
+
 .portrait-card {
   padding: 1.15rem;
   display: flex;
@@ -438,49 +425,15 @@ const realtorChannel = computed(() =>
   margin-top: 0.75rem;
 }
 
-.stats-section {
-  padding: 1.25rem 0 1.5rem;
-}
-
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.15rem;
-}
-
-.stat-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.stat-value {
-  font-family: var(--font-serif);
-  font-size: clamp(1.85rem, 3vw, 2.4rem);
-  font-weight: 700;
-  color: var(--accent-primary);
-  line-height: 1.1;
-}
-
-.stat-label {
-  font-size: 0.98rem;
-  font-weight: 700;
-}
-
-.stat-detail {
-  font-size: 0.82rem;
-  color: var(--text-secondary);
-}
-
 /* Pathways Gateway Section */
 .pathways-section {
-  padding-top: 1rem;
+  padding-top: 1.5rem;
   padding-bottom: 2.5rem;
 }
 
 .pathways-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
@@ -619,13 +572,8 @@ const realtorChannel = computed(() =>
     margin: 0 auto;
   }
 
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 0.85rem;
-  }
-
   .pathways-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 
   .commitments-grid {
@@ -667,35 +615,12 @@ const realtorChannel = computed(() =>
     aspect-ratio: 4 / 3.6;
   }
 
-  .stat-card {
-    padding: 1rem;
-  }
-
-  .stat-value {
-    font-size: 1.6rem;
-  }
-
-  .stat-label {
-    font-size: 0.88rem;
-  }
-
-  .stat-detail {
-    font-size: 0.76rem;
-    line-height: 1.4;
-  }
-
   .section-cta-row {
     flex-direction: column;
   }
 
   .section-cta-row .btn {
     width: 100%;
-  }
-}
-
-@media (max-width: 360px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
   }
 }
 </style>
