@@ -2,13 +2,11 @@
 import { RouterView } from 'vue-router'
 import NavBar from '@/components/NavBar.vue'
 import FooterBar from '@/components/FooterBar.vue'
-import ArchitecturalCanvasBackground from '@/components/ArchitecturalCanvasBackground.vue'
 import StickyMobileBar from '@/components/StickyMobileBar.vue'
 </script>
 
 <template>
   <div class="app-shell">
-    <ArchitecturalCanvasBackground />
     <NavBar />
 
     <main class="main-content">

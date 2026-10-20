@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, computed, watch, nextTick } from 'vue'
+import { ref, computed, watch, nextTick, onMounted } from 'vue'
 import { realtorProfile, currentLocale, t } from '@/data/realtorProfile'
+import { submitContactMessage } from '@/services/contactFormService'
 import SocialIcon from '@/components/SocialIcon.vue'
 
 const props = defineProps<{
@@ -156,6 +157,99 @@ const whatsappLinkHref = computed(() => {
 
 function handlePreparePlan() {
   submittedPreview.value = true
+}
+
+const honeypot = ref('')
+const mountTime = ref(0)
+const isSending = ref(false)
+const submitNotice = ref('')
+
+onMounted(() => {
+  mountTime.value = Date.now()
+})
+
+const activeModeDetails = computed<Record<string, string | undefined>>(() => {
+  if (activeMode.value === 'buyer') {
+    return {
+      'Plan Type': 'VIP Buyer & New Construction Search',
+      'Target NC Area': effectiveLocation.value,
+      'Budget Range': budgetRange.value,
+      'Buying Timeline': buyerTimeline.value,
+      'Primary Focus': buyerProgram.value,
+      'Must-Haves & Notes': buyerNotes.value || 'None specified'
+    }
+  }
+  if (activeMode.value === 'seller') {
+    return {
+      'Plan Type': 'Custom Seller Home Valuation (CMA)',
+      'Property Address': propertyAddress.value || 'Research Triangle, NC',
+      'Property Layout & Specs': propertySpecs.value,
+      'Estimated Value Range': estimatedRange.value,
+      'Selling Timeline': sellerTimeline.value,
+      'Recent Upgrades & Goals': sellerUpgrades.value || 'None specified'
+    }
+  }
+  return {
+    'Plan Type': 'NC Relocation & Strategy Consultation',
+    'Relocating From': movingFrom.value || 'Out of Area / NC',
+    'Primary Objective': relocationGoal.value,
+    'Target NC Area': effectiveLocation.value,
+    'Questions & Notes': relocationNotes.value || 'None specified'
+  }
+})
+
+async function handleSendEmail() {
+  if (isSending.value) return
+
+  // Validation: ensure email is provided so Maryin can send the plan
+  if (!clientEmail.value.trim()) {
+    submitNotice.value =
+      currentLocale.value === 'en'
+        ? 'Please enter your email address so Maryin can send you your custom plan.'
+        : 'Por favor ingresa tu correo electrónico para que Maryin pueda enviarte tu plan personalizado.'
+    submittedPreview.value = true
+    return
+  }
+
+  isSending.value = true
+  submitNotice.value = ''
+
+  try {
+    const res = await submitContactMessage({
+      name: clientName.value.trim() || (currentLocale.value === 'en' ? 'Prospective NC Client' : 'Cliente Potencial NC'),
+      email: clientEmail.value.trim(),
+      subject: generatedSubject.value,
+      message: generatedBody.value,
+      phone: clientPhone.value.trim() || undefined,
+      preferredLanguage: preferredLanguage.value,
+      honeypot: honeypot.value,
+      mountTime: mountTime.value,
+      details: {
+        ...activeModeDetails.value,
+        'Client Name': clientName.value.trim() || 'Not provided',
+        'Client Phone': clientPhone.value.trim() || 'Not provided',
+        'Client Email': clientEmail.value.trim(),
+        'Preferred Language': preferredLanguage.value
+      }
+    })
+
+    submittedPreview.value = true
+    if (res.provider === 'mailto') {
+      submitNotice.value =
+        currentLocale.value === 'en'
+          ? 'Opening your email client with your plan...'
+          : 'Abriendo tu aplicación de correo con tu plan...'
+    } else {
+      submitNotice.value =
+        currentLocale.value === 'en'
+          ? 'Your consultation plan has been submitted directly to Maryin!'
+          : '¡Tu plan de consulta ha sido enviado directamente a Maryin!'
+    }
+  } catch (err) {
+    console.error('[ClientFunnelWidget] Send error:', err)
+  } finally {
+    isSending.value = false
+  }
 }
 
 async function copyBriefToClipboard() {
@@ -368,6 +462,21 @@ async function copyBriefToClipboard() {
 
         <div class="field-group">
           <label class="field-label">
+            {{ currentLocale === 'en' ? 'Estimated Value Range' : 'Rango Estimado de Valor' }}
+          </label>
+          <select v-model="estimatedRange" class="select-field">
+            <option
+              v-for="range in realtorProfile.funnelConfig.budgetRanges"
+              :key="range"
+              :value="range"
+            >
+              {{ range }}
+            </option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">
             {{ currentLocale === 'en' ? 'Ideal Selling Timeline' : 'Tiempo Estimado para Vender' }}
           </label>
           <select v-model="sellerTimeline" class="select-field">
@@ -426,6 +535,37 @@ async function copyBriefToClipboard() {
           </select>
         </div>
 
+        <div class="field-group">
+          <label class="field-label">
+            {{ currentLocale === 'en' ? 'Target NC Area / Region' : 'Área o Región de Interés en NC' }}
+          </label>
+          <select v-model="targetArea" class="select-field">
+            <option
+              v-for="area in realtorProfile.funnelConfig.targetAreas"
+              :key="area"
+              :value="area"
+            >
+              {{ area }}
+            </option>
+          </select>
+        </div>
+
+        <div v-if="targetArea.includes('Other')" class="field-group full-width">
+          <label class="field-label">
+            {{ currentLocale === 'en' ? 'Specific City, Town, or Region in NC' : 'Ciudad, Pueblo o Zona en NC' }}
+          </label>
+          <input
+            v-model="customLocation"
+            type="text"
+            class="input-field"
+            :placeholder="
+              currentLocale === 'en'
+                ? 'e.g., Charlotte, Greensboro, Fayetteville, Coast, or open to recommendations'
+                : 'Ej. Charlotte, Greensboro, Fayetteville, Costa o abierto a recomendaciones'
+            "
+          >
+        </div>
+
         <div class="field-group full-width">
           <label class="field-label">
             {{ currentLocale === 'en' ? 'Questions for Maryin' : 'Preguntas o Comentarios para Maryin' }}
@@ -448,10 +588,12 @@ async function copyBriefToClipboard() {
         <div class="field-group">
           <label class="field-label">
             {{ currentLocale === 'en' ? 'Your Name' : 'Tu Nombre Completo' }}
+            <span class="required-star" aria-hidden="true">*</span>
           </label>
           <input
             v-model="clientName"
             type="text"
+            required
             autocomplete="name"
             class="input-field"
             :placeholder="currentLocale === 'en' ? 'Your full name' : 'Tu nombre y apellido'"
@@ -475,10 +617,12 @@ async function copyBriefToClipboard() {
         <div class="field-group">
           <label class="field-label">
             {{ currentLocale === 'en' ? 'Email Address' : 'Correo Electrónico' }}
+            <span class="required-star" aria-hidden="true">*</span>
           </label>
           <input
             v-model="clientEmail"
             type="email"
+            required
             inputmode="email"
             autocomplete="email"
             class="input-field"
@@ -497,16 +641,30 @@ async function copyBriefToClipboard() {
         </div>
       </div>
 
+      <!-- Anti-Spam Honeypot Trap Field -->
+      <div class="hp-trap" aria-hidden="true">
+        <input v-model="honeypot" type="text" name="_gotcha" tabindex="-1" autocomplete="off" />
+      </div>
+
       <!-- Instant Omnichannel Action Bar -->
       <div class="consultation-actions">
-        <a :href="mailtoHref" class="btn btn-primary" @click="handlePreparePlan">
-          <SocialIcon name="email" :size="15" />
+        <button
+          type="button"
+          class="btn btn-primary"
+          :disabled="isSending"
+          @click="handleSendEmail"
+        >
+          <SocialIcon :name="isSending ? 'spinner' : 'email'" :size="15" />
           <span>{{
-            currentLocale === 'en'
-              ? 'Send Plan via Email to Maryin'
-              : 'Enviar Solicitud por Correo a Maryin'
+            isSending
+              ? currentLocale === 'en'
+                ? 'Sending Plan...'
+                : 'Enviando Solicitud...'
+              : currentLocale === 'en'
+                ? 'Send Plan via Email to Maryin'
+                : 'Enviar Solicitud por Correo a Maryin'
           }}</span>
-        </a>
+        </button>
 
         <a :href="smsLinkHref" class="btn btn-gold" @click="handlePreparePlan">
           <SocialIcon name="sms" :size="15" />
@@ -542,14 +700,19 @@ async function copyBriefToClipboard() {
         </button>
       </div>
 
-      <p v-if="submittedPreview" class="consultation-confirm">
+      <div v-if="submittedPreview" class="consultation-confirm">
         <SocialIcon name="sparkles" :size="15" />
-        <span>{{
-          currentLocale === 'en'
-            ? 'Your custom real estate brief is ready! You can also call Maryin directly at (919) 771-7755 or DM @maryin2ramos_realtor on Instagram.'
-            : '¡Tu resumen personalizado está listo! También puedes llamar directamente a Maryin al (919) 771-7755 o escribirle a @maryin2ramos_realtor en Instagram.'
-        }}</span>
-      </p>
+        <div>
+          <strong v-if="submitNotice" class="submit-notice-line">
+            {{ submitNotice }}
+          </strong>
+          <span>{{
+            currentLocale === 'en'
+              ? 'Your custom real estate brief is ready! You can also call Maryin directly at (919) 771-7755 or DM @maryin2ramos_realtor on Instagram.'
+              : '¡Tu resumen personalizado está listo! También puedes llamar directamente a Maryin al (919) 771-7755 o escribirle a @maryin2ramos_realtor en Instagram.'
+          }}</span>
+        </div>
+      </div>
     </form>
   </div>
 </template>
@@ -680,6 +843,11 @@ async function copyBriefToClipboard() {
   color: var(--text-secondary);
 }
 
+.required-star {
+  color: var(--accent-gold);
+  margin-left: 0.2rem;
+}
+
 .consultation-actions {
   display: flex;
   flex-wrap: wrap;
@@ -712,6 +880,22 @@ async function copyBriefToClipboard() {
 .consultation-confirm :deep(.theme-social-icon) {
   flex-shrink: 0;
   margin-top: 0.15rem;
+}
+
+.submit-notice-line {
+  display: block;
+  font-weight: 700;
+  margin-bottom: 0.3rem;
+}
+
+.hp-trap {
+  position: absolute !important;
+  left: -9999px !important;
+  top: auto !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 @media (max-width: 780px) {

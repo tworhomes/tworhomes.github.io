@@ -130,7 +130,7 @@ const PAGE_LEDGERS: Record<string, string[]> = {
     'VOICE_AND_SMS      = "(919) 771-7755"',
     'PRIMARY_INBOX      = "maryinhomes@gmail.com"',
     'EXP_REALTY_INBOX   = "maryin.dosramos@exprealty.com"',
-    'BRANCH_OFFICE      = "9121 Anson Way, Suite 200, Raleigh, NC 27615"',
+    'BRANCH_OFFICE      = "5200 Greens Dairy Rd, Raleigh, NC 27616"',
     '',
     '// VERIFIED SYNDICATION & SOCIAL LINKS',
     'INSTAGRAM          = "https://www.instagram.com/maryin2ramos_realtor/"',

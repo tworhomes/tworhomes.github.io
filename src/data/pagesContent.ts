@@ -26,8 +26,8 @@ export const hero = {
     es: 'Detrás de cada compra hay una familia construyendo estabilidad, patrimonio y un nuevo futuro. Como Broker destacada en eXp Realty, Maryin Estefania Dos Ramos combina negociación experta, incentivos con constructores y un acompañamiento humano inigualable.'
   },
   primaryCta: {
-    en: 'Start Your Custom Plan',
-    es: 'Iniciar Tu Plan Personalizado'
+    en: 'Schedule a 1-on-1 Consultation',
+    es: 'Agendar una Consulta 1-a-1'
   },
   secondaryCta: {
     en: 'Call or Text (919) 771-7755',
@@ -40,12 +40,7 @@ export const hero = {
   portraitRole: {
     en: 'Licensed NC Real Estate Broker · REALTOR®',
     es: 'Broker Inmobiliaria Licenciada en NC · REALTOR®'
-  },
-  portraitCredentials: [
-    { en: 'New Construction Specialist', es: 'Especialista en Casas Nuevas' },
-    { en: '6+ Years NC Experience', es: '6+ Años de Experiencia en NC' },
-    { en: '52K+ Community', es: 'Comunidad de 52K+' }
-  ]
+  }
 }
 
 // 2. About Page Configuration
@@ -82,8 +77,8 @@ export const aboutPage = {
       es: 'Posición Actual y Respaldo en eXp Realty, LLC'
     },
     body: {
-      en: 'Operating out of eXp Realty’s Raleigh hub (9121 Anson Way, Suite 200, Raleigh, NC 27615) and affiliated with The Vega Team / Michelle Vega Realty, Maryin combines cloud-first global syndication with hands-on local advocacy across 8 North Carolina counties.',
-      es: 'Operando desde la sede de eXp Realty en Raleigh (9121 Anson Way, Suite 200, Raleigh, NC 27615) y afiliada a The Vega Team / Michelle Vega Realty, Maryin combina tecnología inmobiliaria global con atención personalizada en 8 condados de Carolina del Norte.'
+      en: 'Operating out of eXp Realty’s Raleigh hub (5200 Greens Dairy Rd, Raleigh, NC 27616) and affiliated with The Vega Team / Michelle Vega Realty, Maryin combines cloud-first global syndication with hands-on local advocacy across 8 North Carolina counties.',
+      es: 'Operando desde la sede de eXp Realty en Raleigh (5200 Greens Dairy Rd, Raleigh, NC 27616) y afiliada a The Vega Team / Michelle Vega Realty, Maryin combina tecnología inmobiliaria global con atención personalizada en 8 condados de Carolina del Norte.'
     },
     ctaBtn: {
       en: 'Book a 1-on-1 Consultation',

@@ -15,8 +15,8 @@ export const coreAgent = {
   brokerage: 'eXp Realty, LLC',
   teamAffiliation: 'The Vega Team / Michelle Vega Realty at eXp Realty',
   specialDesignation: 'New Construction & Buyer Specialist',
-  officeAddress: '9121 Anson Way, Suite 200, Raleigh, NC 27615',
-  officeMapsUrl: 'https://maps.google.com/?q=9121+Anson+Way+Suite+200+Raleigh+NC+27615',
+  officeAddress: '5200 Greens Dairy Rd, Raleigh, NC 27616',
+  officeMapsUrl: 'https://maps.google.com/?q=5200+Greens+Dairy+Rd+Raleigh+NC+27616',
 
   // 2. Direct Client Communication Endpoints
   phoneDisplay: '(919) 771-7755',

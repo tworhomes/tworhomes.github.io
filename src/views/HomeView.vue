@@ -126,16 +126,6 @@ const realtorChannel = computed(() =>
                   </p>
                 </div>
               </div>
-
-              <div class="portrait-credentials">
-                <span
-                  v-for="(cred, idx) in realtorProfile.hero.portraitCredentials"
-                  :key="idx"
-                  class="tag"
-                >
-                  {{ t(cred) }}
-                </span>
-              </div>
             </div>
           </div>
         </div>
@@ -260,9 +250,6 @@ const realtorChannel = computed(() =>
         <div class="section-cta-row">
           <RouterLink to="/about" class="btn btn-outline">
             {{ t(realtorProfile.commitmentsHeader.ctaBio) }}
-          </RouterLink>
-          <RouterLink to="/contact" class="btn btn-primary">
-            {{ t(realtorProfile.commitmentsHeader.ctaConsultation) }}
           </RouterLink>
         </div>
       </div>
@@ -416,13 +403,6 @@ const realtorChannel = computed(() =>
 .portrait-role {
   font-size: 0.85rem;
   color: var(--text-secondary);
-}
-
-.portrait-credentials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.45rem;
-  margin-top: 0.75rem;
 }
 
 /* Pathways Gateway Section */

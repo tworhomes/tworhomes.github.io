@@ -38,6 +38,8 @@ const iconKey = computed(() => {
   if (clean.includes('copy') || clean.includes('clip')) return 'copy'
   if (clean.includes('check') || clean.includes('done')) return 'check'
   if (clean.includes('spark') || clean.includes('magic')) return 'sparkles'
+  if (clean.includes('spin') || clean.includes('load')) return 'spinner'
+  if (clean.includes('send') || clean.includes('plane') || clean.includes('submit')) return 'send'
   return 'default'
 })
 </script>
@@ -309,6 +311,46 @@ const iconKey = computed(() => {
       <circle cx="19" cy="19" r="1.5" fill="currentColor" />
     </g>
 
+    <!-- SPINNER / LOADING -->
+    <g v-else-if="iconKey === 'spinner'" class="icon-spin-group">
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        opacity="0.25"
+      />
+      <path
+        d="M12 3a9 9 0 0 1 9 9"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.5"
+        stroke-linecap="round"
+      />
+    </g>
+
+    <!-- SEND / PAPER AIRPLANE -->
+    <g v-else-if="iconKey === 'send'">
+      <path
+        d="M22 2L11 13"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+      <polygon
+        points="22 2 15 22 11 13 2 9 22 2"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </g>
+
     <!-- FALLBACK ARROW GLYPH -->
     <g v-else>
       <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2" />
@@ -324,6 +366,20 @@ const iconKey = computed(() => {
   flex-shrink: 0;
   transition: transform var(--transition-fast, 0.2s cubic-bezier(0.16, 1, 0.3, 1)),
               color var(--transition-fast, 0.2s cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.icon-spin-group {
+  transform-origin: center;
+  animation: icon-spin 0.85s linear infinite;
+}
+
+@keyframes icon-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 </style>
 

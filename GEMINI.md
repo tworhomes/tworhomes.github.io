@@ -26,7 +26,7 @@ This file records both our **Standout Real Estate Website Design Memory** and **
 - **Dreamy, Fluid & Non-Punchy Motion:**
   - Silky easing curves: `cubic-bezier(0.16, 1, 0.3, 1)`.
   - Buttons: Subtle hover lift (`translateY(-1.5px)`), gentle click press (`translateY(0.5px)`), zero scale distortion.
-  - Background Canvas (`ArchitecturalCanvasBackground.vue`): Uses the **Dreamy Nebula** physics preset (`springTension: 0.018`, `springDamping: 0.92`, `trailTension: 0.009`, `trailDamping: 0.90`, `radius: 180`, `falloffExponent: 1.5`, `easeInSpeed: 0.026`), illuminating authentic NC Research Triangle coordinates, MLS stats, and architectural telemetry below `headerHeight: 70` (`startY: 92`).
+  - Clean Background: Clean, calm background across all devices (no cursor-following canvas effects), letting the typography, authentic imagery, and conversion funnels shine.
 - **Eye-Friendly Light Mode & Rich Dark Mode:**
   - Light mode uses warm natural stone/paper canvases (`#f6f5f1` primary, `#edebe4` secondary), solid elevated cards (`#ffffff`), and deep warm charcoal typography (`#292524`).
   - Dark mode uses deep eXp midnight slate (`#0b0f19` primary, `#151e2e` elevated cards) with oceanic sky (`#38bdf8`) and warm champagne gold (`#f59e0b`) accents.
