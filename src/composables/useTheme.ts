@@ -11,11 +11,11 @@ import {
 const themeRegistry = ref<Record<string, ThemeDefinition>>({ ...builtinThemes })
 
 // Active theme state
-const currentThemeId = ref<string>(DEFAULT_DARK_THEME_ID)
+const currentThemeId = ref<string>(DEFAULT_LIGHT_THEME_ID)
 
 // Computed active ThemeDefinition
 const currentTheme = computed<ThemeDefinition>(() => {
-  return themeRegistry.value[currentThemeId.value] || builtinThemes[DEFAULT_DARK_THEME_ID]
+  return themeRegistry.value[currentThemeId.value] || builtinThemes[DEFAULT_LIGHT_THEME_ID]
 })
 
 // Convenience computed boolean
@@ -151,22 +151,17 @@ function resolveInitialTheme(): ThemeDefinition {
 
     // 3. Check legacy light/dark preference
     const savedPref = localStorage.getItem('theme-preference')
-    if (savedPref === 'light') {
-      return builtinThemes[DEFAULT_LIGHT_THEME_ID]
-    }
     if (savedPref === 'dark') {
       return builtinThemes[DEFAULT_DARK_THEME_ID]
     }
-
-    // 4. Fall back to user's OS / browser color scheme
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+    if (savedPref === 'light') {
       return builtinThemes[DEFAULT_LIGHT_THEME_ID]
     }
   } catch {
     // Storage access error fallback
   }
 
-  return builtinThemes[DEFAULT_DARK_THEME_ID]
+  return builtinThemes[DEFAULT_LIGHT_THEME_ID]
 }
 
 let isInitialized = false

@@ -25,193 +25,193 @@ export const DEFAULT_DARK_THEME_ID = 'midnight-slate'
 export const DEFAULT_LIGHT_THEME_ID = 'warm-stone'
 
 export const builtinThemes: Record<string, ThemeDefinition> = {
-  'midnight-slate': {
-    id: 'midnight-slate',
-    name: {
-      en: 'Midnight Slate',
-      es: 'Pizarra Medianoche'
-    },
-    description: {
-      en: 'Executive eXp Slate, Oceanic Sky & Champagne Gold',
-      es: 'Pizarra Ejecutiva eXp, Cielo Oceánico y Oro Champaña'
-    },
-    colorScheme: 'dark',
-    metaColor: '#0b0f19',
-    canvasColors: {
-      ambient: '148, 163, 184',
-      highlight: '56, 189, 248'
-    },
-    colors: {
-      bgPrimary: '#0b0f19',
-      bgSecondary: '#111827',
-      bgElevated: '#151e2e',
-      bgGlass: 'rgba(15, 23, 42, 0.95)',
-      textPrimary: '#f8fafc',
-      textSecondary: '#94a3b8',
-      textMuted: '#64748b',
-      borderSubtle: 'rgba(148, 163, 184, 0.14)',
-      borderHover: 'rgba(56, 189, 248, 0.45)',
-      accentPrimary: '#38bdf8',
-      accentSecondary: '#818cf8',
-      accentGold: '#f59e0b',
-      accentGoldGlow: 'rgba(245, 158, 11, 0.14)',
-      accentEmerald: '#34d399',
-      accentGlow: 'rgba(56, 189, 248, 0.14)',
-      ambientGlow2: 'rgba(245, 158, 11, 0.06)',
-      shadowCard: '0 12px 32px -12px rgba(2, 6, 23, 0.7)',
-      btnShadow: '0 4px 18px -4px rgba(56, 189, 248, 0.45)'
-    }
-  },
-
   'warm-stone': {
     id: 'warm-stone',
     name: {
-      en: 'Warm Stone',
-      es: 'Piedra Cálida'
+      en: 'Limestone Monograph',
+      es: 'Monografía Caliza'
     },
     description: {
-      en: 'Soothing Paper Canvas, Charcoal & Oceanic Sapphire',
-      es: 'Lienzo Cálido de Papel, Carbón y Zafiro Oceánico'
+      en: 'Beverly Hills Alabaster, Travertine Stone, Espresso Ink & Brushed Brass',
+      es: 'Alabastro Cálido, Travertino, Tinta Espresso y Latón Cepillado'
     },
     colorScheme: 'light',
-    metaColor: '#f6f5f1',
+    metaColor: '#F6F4EF',
     canvasColors: {
-      ambient: '100, 116, 139',
-      highlight: '3, 105, 161'
+      ambient: '110, 106, 95',
+      highlight: '184, 151, 104'
     },
     colors: {
-      bgPrimary: '#f6f5f1',
-      bgSecondary: '#edebe4',
-      bgElevated: '#ffffff',
-      bgGlass: 'rgba(246, 245, 241, 0.92)',
-      textPrimary: '#292524',
-      textSecondary: '#57534e',
-      textMuted: '#78716c',
-      borderSubtle: 'rgba(41, 37, 36, 0.09)',
-      borderHover: 'rgba(3, 105, 161, 0.35)',
-      accentPrimary: '#0369a1',
-      accentSecondary: '#1e40af',
-      accentGold: '#b45309',
-      accentGoldGlow: 'rgba(180, 83, 9, 0.09)',
-      accentEmerald: '#047857',
-      accentGlow: 'rgba(3, 105, 161, 0.08)',
-      ambientGlow2: 'rgba(180, 83, 9, 0.05)',
-      shadowCard: '0 4px 20px -2px rgba(41, 37, 36, 0.06), 0 2px 6px -1px rgba(41, 37, 36, 0.04)',
-      btnShadow: '0 4px 14px -4px rgba(3, 105, 161, 0.28)'
+      bgPrimary: '#F6F4EF',
+      bgSecondary: '#EAE6DF',
+      bgElevated: '#FDFCF9',
+      bgGlass: 'rgba(246, 244, 239, 0.94)',
+      textPrimary: '#141311',
+      textSecondary: '#4A463F',
+      textMuted: '#787267',
+      borderSubtle: 'rgba(20, 19, 17, 0.12)',
+      borderHover: 'rgba(154, 123, 79, 0.55)',
+      accentPrimary: '#8C6D3F',
+      accentSecondary: '#141311',
+      accentGold: '#9A7B4F',
+      accentGoldGlow: 'rgba(184, 151, 104, 0.14)',
+      accentEmerald: '#2E5A44',
+      accentGlow: 'rgba(184, 151, 104, 0.10)',
+      ambientGlow2: 'rgba(20, 19, 17, 0.03)',
+      shadowCard: '0 10px 30px -10px rgba(20, 19, 17, 0.07)',
+      btnShadow: '0 8px 22px -6px rgba(20, 19, 17, 0.18)'
+    }
+  },
+
+  'midnight-slate': {
+    id: 'midnight-slate',
+    name: {
+      en: 'Espresso Atelier',
+      es: 'Atelier Espresso'
+    },
+    description: {
+      en: 'Deep Espresso Ink, Architectural Charcoal & Brushed Champagne Brass',
+      es: 'Tinta Espresso Profunda, Carbón Arquitectónico y Latón Champaña'
+    },
+    colorScheme: 'dark',
+    metaColor: '#141311',
+    canvasColors: {
+      ambient: '163, 158, 147',
+      highlight: '184, 151, 104'
+    },
+    colors: {
+      bgPrimary: '#141311',
+      bgSecondary: '#1C1A17',
+      bgElevated: '#221F1B',
+      bgGlass: 'rgba(20, 19, 17, 0.94)',
+      textPrimary: '#F6F4EF',
+      textSecondary: '#C2BDB2',
+      textMuted: '#8A8478',
+      borderSubtle: 'rgba(246, 244, 239, 0.13)',
+      borderHover: 'rgba(184, 151, 104, 0.55)',
+      accentPrimary: '#B89768',
+      accentSecondary: '#D4B689',
+      accentGold: '#C5A059',
+      accentGoldGlow: 'rgba(184, 151, 104, 0.16)',
+      accentEmerald: '#529471',
+      accentGlow: 'rgba(184, 151, 104, 0.12)',
+      ambientGlow2: 'rgba(184, 151, 104, 0.05)',
+      shadowCard: '0 16px 40px -12px rgba(0, 0, 0, 0.65)',
+      btnShadow: '0 8px 24px -6px rgba(0, 0, 0, 0.5)'
     }
   },
 
   'emerald-oaks': {
     id: 'emerald-oaks',
     name: {
-      en: 'Emerald Oaks',
-      es: 'Robles Esmeralda'
+      en: 'Carolina Estate Pine',
+      es: 'Pino de Carolina'
     },
     description: {
-      en: 'Deep Carolina Pines, Forest Emerald & Warm Amber',
-      es: 'Pinos de Carolina, Esmeralda Bosque y Ámbar Cálido'
+      en: 'Deep Carolina Pine, Botanical Slate & Antique Brass',
+      es: 'Pino Profundo de Carolina, Pizarra Botánica y Latón Antiguo'
     },
     colorScheme: 'dark',
-    metaColor: '#05130d',
+    metaColor: '#0D1713',
     canvasColors: {
-      ambient: '74, 222, 128',
-      highlight: '16, 185, 129'
+      ambient: '163, 177, 168',
+      highlight: '184, 151, 104'
     },
     colors: {
-      bgPrimary: '#05130d',
-      bgSecondary: '#0b1d16',
-      bgElevated: '#10281e',
-      bgGlass: 'rgba(8, 26, 18, 0.94)',
-      textPrimary: '#f0fdf4',
-      textSecondary: '#a7f3d0',
-      textMuted: '#6ee7b7',
-      borderSubtle: 'rgba(74, 222, 128, 0.15)',
-      borderHover: 'rgba(52, 211, 153, 0.45)',
-      accentPrimary: '#10b981',
-      accentSecondary: '#059669',
-      accentGold: '#d97706',
-      accentGoldGlow: 'rgba(217, 119, 6, 0.16)',
-      accentEmerald: '#10b981',
-      accentGlow: 'rgba(16, 185, 129, 0.16)',
-      ambientGlow2: 'rgba(217, 119, 6, 0.08)',
-      shadowCard: '0 12px 32px -12px rgba(2, 20, 10, 0.75)',
-      btnShadow: '0 4px 18px -4px rgba(16, 185, 129, 0.45)'
+      bgPrimary: '#0D1713',
+      bgSecondary: '#13211B',
+      bgElevated: '#182922',
+      bgGlass: 'rgba(13, 23, 19, 0.94)',
+      textPrimary: '#F4F3EE',
+      textSecondary: '#B8C4BC',
+      textMuted: '#7E8F85',
+      borderSubtle: 'rgba(244, 243, 238, 0.13)',
+      borderHover: 'rgba(184, 151, 104, 0.5)',
+      accentPrimary: '#B89768',
+      accentSecondary: '#D4B689',
+      accentGold: '#C5A059',
+      accentGoldGlow: 'rgba(197, 160, 89, 0.16)',
+      accentEmerald: '#529471',
+      accentGlow: 'rgba(184, 151, 104, 0.12)',
+      ambientGlow2: 'rgba(82, 148, 113, 0.08)',
+      shadowCard: '0 16px 40px -12px rgba(4, 10, 8, 0.75)',
+      btnShadow: '0 8px 24px -6px rgba(4, 10, 8, 0.55)'
     }
   },
 
   'coastal-breeze': {
     id: 'coastal-breeze',
     name: {
-      en: 'Coastal Breeze',
-      es: 'Brisa Costera'
+      en: 'Sotheby’s Parchment',
+      es: 'Pergamino Clásico'
     },
     description: {
-      en: 'Carolina Sea-Salt, Crisp Slate & Nautical Blue',
-      es: 'Sal Marina de Carolina, Pizarra Nítida y Azul Náutico'
+      en: 'Crisp Gallery Parchment, Heritage Navy & Antique Gold',
+      es: 'Pergamino de Galería, Azul Marino Patrimonial y Oro Antiguo'
     },
     colorScheme: 'light',
-    metaColor: '#f4f8fb',
+    metaColor: '#F9F8F6',
     canvasColors: {
-      ambient: '100, 116, 139',
-      highlight: '2, 132, 199'
+      ambient: '90, 98, 112',
+      highlight: '11, 22, 38'
     },
     colors: {
-      bgPrimary: '#f4f8fb',
-      bgSecondary: '#e8f1f7',
-      bgElevated: '#ffffff',
-      bgGlass: 'rgba(244, 248, 251, 0.94)',
-      textPrimary: '#0f172a',
-      textSecondary: '#334155',
-      textMuted: '#64748b',
-      borderSubtle: 'rgba(15, 23, 42, 0.08)',
-      borderHover: 'rgba(2, 132, 199, 0.4)',
-      accentPrimary: '#0284c7',
-      accentSecondary: '#2563eb',
-      accentGold: '#d97706',
-      accentGoldGlow: 'rgba(217, 119, 6, 0.1)',
-      accentEmerald: '#059669',
-      accentGlow: 'rgba(2, 132, 199, 0.09)',
-      ambientGlow2: 'rgba(217, 119, 6, 0.05)',
-      shadowCard: '0 4px 20px -2px rgba(15, 23, 42, 0.06)',
-      btnShadow: '0 4px 14px -4px rgba(2, 132, 199, 0.32)'
+      bgPrimary: '#F9F8F6',
+      bgSecondary: '#F0EDE6',
+      bgElevated: '#FFFFFF',
+      bgGlass: 'rgba(249, 248, 246, 0.94)',
+      textPrimary: '#0B1626',
+      textSecondary: '#3E4856',
+      textMuted: '#6C7583',
+      borderSubtle: 'rgba(11, 22, 38, 0.12)',
+      borderHover: 'rgba(197, 160, 89, 0.55)',
+      accentPrimary: '#0B1626',
+      accentSecondary: '#1C2D42',
+      accentGold: '#9A7B4F',
+      accentGoldGlow: 'rgba(197, 160, 89, 0.14)',
+      accentEmerald: '#1F563E',
+      accentGlow: 'rgba(11, 22, 38, 0.06)',
+      ambientGlow2: 'rgba(197, 160, 89, 0.05)',
+      shadowCard: '0 10px 30px -10px rgba(11, 22, 38, 0.06)',
+      btnShadow: '0 8px 20px -6px rgba(11, 22, 38, 0.2)'
     }
   },
 
   'champagne-onyx': {
     id: 'champagne-onyx',
     name: {
-      en: 'Champagne Onyx',
-      es: 'Ónice y Champaña'
+      en: 'Obsidian & Merlot',
+      es: 'Obsidiana y Merlot'
     },
     description: {
-      en: 'High-Contrast Jet Onyx, Warm Gold & Radiant Glow',
-      es: 'Ónice Azabache de Alto Contraste, Oro Cálido y Brillo Radiante'
+      en: 'Gallery Obsidian, Estate Wine & Warm Champagne Gold',
+      es: 'Obsidiana de Galería, Vino Reserva y Oro Champaña'
     },
     colorScheme: 'dark',
-    metaColor: '#0d0d0f',
+    metaColor: '#0F0D0D',
     canvasColors: {
-      ambient: '161, 161, 170',
-      highlight: '234, 179, 8'
+      ambient: '168, 152, 148',
+      highlight: '212, 175, 55'
     },
     colors: {
-      bgPrimary: '#0d0d0f',
-      bgSecondary: '#151419',
-      bgElevated: '#1a1921',
-      bgGlass: 'rgba(17, 16, 22, 0.95)',
-      textPrimary: '#fefcf8',
-      textSecondary: '#d4cebe',
-      textMuted: '#968f7f',
-      borderSubtle: 'rgba(234, 179, 8, 0.14)',
-      borderHover: 'rgba(234, 179, 8, 0.45)',
-      accentPrimary: '#eab308',
-      accentSecondary: '#f59e0b',
-      accentGold: '#facc15',
-      accentGoldGlow: 'rgba(250, 204, 21, 0.18)',
-      accentEmerald: '#34d399',
-      accentGlow: 'rgba(234, 179, 8, 0.15)',
-      ambientGlow2: 'rgba(234, 179, 8, 0.08)',
-      shadowCard: '0 12px 32px -12px rgba(0, 0, 0, 0.8)',
-      btnShadow: '0 4px 18px -4px rgba(234, 179, 8, 0.4)'
+      bgPrimary: '#0F0D0D',
+      bgSecondary: '#1A1415',
+      bgElevated: '#241B1D',
+      bgGlass: 'rgba(15, 13, 13, 0.94)',
+      textPrimary: '#F7F5F0',
+      textSecondary: '#C9BFC1',
+      textMuted: '#8F8285',
+      borderSubtle: 'rgba(247, 245, 240, 0.13)',
+      borderHover: 'rgba(212, 175, 55, 0.5)',
+      accentPrimary: '#C5A059',
+      accentSecondary: '#D4AF37',
+      accentGold: '#D4AF37',
+      accentGoldGlow: 'rgba(212, 175, 55, 0.16)',
+      accentEmerald: '#529471',
+      accentGlow: 'rgba(212, 175, 55, 0.12)',
+      ambientGlow2: 'rgba(61, 22, 30, 0.2)',
+      shadowCard: '0 16px 40px -12px rgba(0, 0, 0, 0.8)',
+      btnShadow: '0 8px 24px -6px rgba(0, 0, 0, 0.6)'
     }
   }
 }
